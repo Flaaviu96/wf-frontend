@@ -1,25 +1,28 @@
-import { Component, EventEmitter, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { LoginRequest } from '../../../../models/loginRequest.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login-form',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   standalone: true,
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.css'
 })
 export class LoginFormComponent {
-  email: string = '';
-  password: string = '';
-  remember: boolean = false;
+  loginRequest: LoginRequest = {
+    username: '',
+    password: ''
 
-  @Output() submitForm = new EventEmitter<{ email: string; password: string; remember: boolean }>();
+  }
+
+  @Output() submitForm = new EventEmitter<LoginRequest>();
+
+  @Input() loginFailed: boolean = false;
 
   onSubmit() {
-    console.log('Form Submitted');
-    console.log('Email:', this.email);
-    console.log('Password:', this.password);
-    console.log('Remember:', this.remember);
-    this.email = "aaaaaaaaaaa";
+    this.submitForm.emit(this.loginRequest);
   }
+
 }

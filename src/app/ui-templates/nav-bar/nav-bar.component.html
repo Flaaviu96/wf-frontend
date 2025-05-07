@@ -1,0 +1,28 @@
+<nav class="bg-blue-800 text-white px-4 py-3 flex items-center justify-between">
+    <div class="text-xl font-bold">Workforge</div>
+  
+    <div class="hidden md:flex space-x-4">
+      <a routerLink="/" class="hover:text-gray-300">Home</a>
+      <a routerLink="/about" class="hover:text-gray-300">About</a>
+      <a routerLink="/services" class="hover:text-gray-300">Services</a>
+      <a routerLink="/contact" class="hover:text-gray-300">Contact</a>
+    </div>
+  
+    <div class="md:hidden">
+      <button (click)="toggleMenu()" class="focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+  
+  <div *ngIf="isMenuOpen" class="md:hidden px-4 py-2 space-y-2 bg-gray-700 text-white">
+    <a routerLink="/" class="block hover:text-gray-300">Home</a>
+    <a routerLink="/about" class="block hover:text-gray-300">About</a>
+    <a routerLink="/services" class="block hover:text-gray-300">Services</a>
+    <a routerLink="/contact" class="block hover:text-gray-300">Contact</a>
+  </div>
+  

@@ -1,0 +1,10 @@
+<div class = "flex flex-wrap">
+    <div class= "m-8" *ngIf="projects.length > 0; else noProjects">
+        <div *ngFor="let project of projects">
+            <app-project-card [project]="project"></app-project-card>
+        </div>
+    </div>
+</div>
+<ng-template #noProjects>
+    <p>No projects available.</p>
+  </ng-template>
