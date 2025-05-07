@@ -14,4 +14,8 @@ export class ProjectService {
   getProjects(): Observable<Project[]> {
     return this.http.get<Project[]>(enviroment.apiProjectUrl, { withCredentials: true });
   }
+
+  getProjectWithAllTasks(projectId : string) : Observable<Project> {
+    return this.http.get<Project>(`${enviroment.apiProjectUrl}/${projectId}/tasks`, { withCredentials: true });
+  }
 }

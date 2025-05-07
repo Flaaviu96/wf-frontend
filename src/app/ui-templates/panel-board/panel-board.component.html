@@ -1,0 +1,8 @@
+<div class="flex-1 p-4 bg-gray-200 rounded-lg shadow-md">
+    <h3 class="font-semibold text-lg mb-4">{{state}}</h3>
+    <div class="space-y-2">
+      <div *ngFor="let task of tasks">
+        <div class="bg-white p-3 rounded-lg shadow-sm">{{task.taskName}}</div>
+      </div>
+    </div>
+  </div>

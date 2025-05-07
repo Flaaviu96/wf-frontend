@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { LoginFormComponent } from "../../components/login-form/login-form.component";
 import { LoginRequest } from '../../../../models/loginRequest.model';
-import { AuthServiceComponent } from '../../../../Services/auth-service/auth-service.component';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../Services/auth-service/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 
 export class LoginComponent {
   loginFailed: boolean = false;
-  constructor(private authService :  AuthServiceComponent, private router : Router) {}
+  constructor(private authService :  AuthService, private router : Router) {}
 
   onLoginSubmit(loginRequest: LoginRequest): void {
     this.authService.authenticate(loginRequest).subscribe({

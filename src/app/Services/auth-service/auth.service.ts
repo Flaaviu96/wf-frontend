@@ -1,20 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Injectable } from '@angular/core';
-import { LoginRequest } from '../../models/loginRequest.model';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { enviroment } from '../../enviroment';
-
-@Component({
-  selector: 'app-auth-service',
-  imports: [],
-  templateUrl: './auth-service.component.html',
-  styleUrl: './auth-service.component.css'
-})
+import { LoginRequest } from '../../models/loginRequest.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthServiceComponent {
+export class AuthService {
   private loggedInSubject = new BehaviorSubject<boolean>(false);
   loginStatus = this.loggedInSubject.asObservable();
   
