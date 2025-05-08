@@ -19,6 +19,6 @@ export class ProjectCardComponent {
  constructor(private route : Router) {}
 
  viewProject() {
-  this.route.navigateByUrl("/viewProject");
+  this.route.navigate(['/viewProject', this.project.id]);
  }
 }
