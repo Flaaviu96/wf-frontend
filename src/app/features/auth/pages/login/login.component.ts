@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { LoginFormComponent } from "../../components/login-form/login-form.component";
 import { LoginRequest } from '../../../../models/loginRequest.model';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../../Services/auth-service/auth.service';
+import { AuthDataService } from '../../../../services/auth-data-service/auth-data.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +14,7 @@ import { AuthService } from '../../../../Services/auth-service/auth.service';
 
 export class LoginComponent {
   loginFailed: boolean = false;
-  constructor(private authService :  AuthService, private router : Router) {}
+  constructor(private authService :  AuthDataService, private router : Router) {}
 
   onLoginSubmit(loginRequest: LoginRequest): void {
     this.authService.authenticate(loginRequest).subscribe({
