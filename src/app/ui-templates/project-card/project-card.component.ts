@@ -10,11 +10,12 @@ import { Project } from '../../models/project.model';
 })
 export class ProjectCardComponent {
   @Input() project : Project = {
-     id : 0,
-     projectName : '',
-     projectDescription : '',
-     workflowId : 0,
- }
+    id: 0,
+    projectName: '',
+    projectDescription: '',
+    workflowId: 0,
+    projectKey: ''
+  }
 
  constructor(private route : Router) {}
 

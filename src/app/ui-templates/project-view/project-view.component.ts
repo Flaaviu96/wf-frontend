@@ -31,4 +31,8 @@ export class ProjectViewComponent {
       })
     }
   }
+
+  hasTasks() {
+    return Object.values(this.tasksGroupedByState).some(tasks => tasks.length > 0);
+  }
 }

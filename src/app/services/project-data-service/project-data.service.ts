@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ProjectService } from '../project-service-api/project-api.service';
 import { Task } from '../../models/task.model';
 import { Project } from '../../models/project.model';
 import { map, Observable } from 'rxjs';
+import { ProjectService } from '../project-service-api/project-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +22,9 @@ export class ProjectDataService {
         }, {} as Record<string, Task[]>);
       })
     );
+  }
+
+  getAvailableProjects() : Observable<Project[]> {
+    return this.projectServiceApi.getProjects();
   }
 }
