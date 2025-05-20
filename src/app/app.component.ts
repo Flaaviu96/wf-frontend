@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
-import { LoginFormComponent } from "./features/auth/components/login-form/login-form.component";
+import { RouterModule} from '@angular/router';
 import { LoginComponent } from "./features/auth/pages/login/login.component";
 import { CommonModule } from '@angular/common';
 import { NavBarComponent } from "./ui-templates/nav-bar/nav-bar.component";
 import { MainPageComponent } from "./ui-templates/main-page/main-page.component";
 import { ProjectViewComponent } from './ui-templates/project-view/project-view.component';
-import { AuthService } from './services/auth-service-api/auth-api.service';
+import { AuthDataService } from './services/auth-data-service/auth-data.service';
 @Component({
   selector: 'app-root',
   imports: [LoginComponent, NavBarComponent, RouterModule, CommonModule, MainPageComponent, RouterModule, ProjectViewComponent],
@@ -18,7 +17,7 @@ export class AppComponent {
   title = 'workforge-front';
   isLoggedIn : boolean = false;
 
-  constructor(private authService : AuthService){}
+  constructor(private authService : AuthDataService){}
 
   ngOnInit() {
     this.authService.loginStatus.subscribe((status : boolean) => {

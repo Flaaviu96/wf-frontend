@@ -1,8 +1,13 @@
-<div class="flex-1 p-4 bg-gray-200 rounded-lg shadow-md">
-    <h3 class="font-semibold text-lg mb-4">{{state}}</h3>
-    <div class="space-y-2">
-      <div *ngFor="let task of tasks">
-        <div class="bg-white p-3 rounded-lg shadow-sm">{{task.taskName}}</div>
-      </div>
+<div class="flex-1 w-xs p-4 bg-gray-200 rounded-lg shadow-md">
+  <h3 class="font-semibold text-lg mb-4">{{ state }}</h3>
+  <div class="space-y-2">
+    <div *ngFor="let task of tasks">
+      <button 
+        (click)="showTask(task.id)"
+        class="w-full block text-left bg-white text-black px-4 py-2 rounded border border-gray-300
+         hover:bg-white hover:text-blue-600 hover:border-blue-400 transition duration-300">
+        {{ task.taskName }}
+      </button>
     </div>
   </div>
+</div>

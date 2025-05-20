@@ -1,0 +1,109 @@
+<div class="flex flex-col h-screen items-start p-8 gap-6">
+  <!-- Buttons Row -->
+  <div class="flex flex-wrap gap-4">
+    <button
+      class="w-auto bg-gray-100 text-black px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 hover:text-blue-600 hover:border-blue-400 transition duration-300"
+    >
+      Edit
+    </button>
+    <button
+      class="w-auto bg-gray-100 text-black px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 hover:text-blue-600 hover:border-blue-400 transition duration-300"
+    >
+      Add comment
+    </button>
+    <button
+      class="w-auto bg-gray-100 text-black px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 hover:text-blue-600 hover:border-blue-400 transition duration-300"
+    >
+      Assign
+    </button>
+    <button
+      class="w-auto bg-gray-100 text-black px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 hover:text-blue-600 hover:border-blue-400 transition duration-300"
+    >
+      To do
+    </button>
+  </div>
+
+  <div class="flex w-full justify-between">
+    <!-- Task Details + Comments Group -->
+    <div class="w-5xl bg-white rounded-lg p-6 shadow-inner flex flex-col gap-6">
+      <h2 class="text-xl font-semibold mb-4 text-gray-600">Task Details</h2>
+      <p class="text-gray-600"><strong>Name:</strong></p>
+      <p class="text-gray-600"><strong>Description:</strong></p>
+      <p class="text-gray-600"><strong>Status:</strong></p>
+
+      <div>
+        <h3 class="font-semibold mb-2">Attachments</h3>
+        <div
+          class="flex overflow-x-auto space-x-4 p-2 bg-white rounded border border-gray-300 attachments-scroll"
+        >
+          <div
+            *ngFor="let attachment of task.attachments"
+            class="flex-shrink-0 w-16 h-16 flex items-center justify-center border rounded cursor-pointer hover:bg-gray-200"
+          >
+            <img
+              *ngIf="attachment.thumbnailUrl"
+              [src]="attachment.thumbnailUrl"
+              alt="Attachment"
+              class="max-w-full max-h-full"
+            />
+            <i
+              *ngIf="!attachment.thumbnailUrl"
+              class="fas fa-file-alt text-gray-500 text-2xl"
+            ></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Write a comment -->
+      <div class="mt-30">
+        <textarea
+          rows="4"
+          placeholder="Write a comment..."
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ></textarea>
+        <div class="flex gap-4 mt-2">
+          <button
+            class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition rounded-lg"
+          >
+            Save
+          </button>
+          <button
+            class="mt-2 px-4 py-2 bg-gray-100 text-black rounded hover:bg-gray-300 transition rounded-lg"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- Comments Section -->
+      <div class="bg-white rounded-lg p-6 shadow-md max-h-64 overflow-y-auto">
+        <h3 class="text-lg font-semibold mb-3">Comments</h3>
+        <p class="text-sm text-gray-700">says:</p>
+        <p></p>
+        <p class="text-xs text-gray-500"></p>
+      </div>
+    </div>
+
+    <!-- Right side-->
+    <div
+      class="flex flex-col w-64 bg-white rounded-lg p-6 shadow-inner space-y-3"
+    >
+      <p class="text-gray-600">Assignee:</p>
+      <p class="text-gray-600">Created:</p>
+      <p class="text-gray-600">Updated:</p>
+      <p class="mt-5 font-bold">Time tracking</p>
+
+      <div class="w-full">
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+          <div class="bg-blue-600 h-4 rounded-full" style="width: 45%"></div>
+        </div>
+
+        <!-- Text below the bar -->
+        <p class="mt-2 text-sm text-gray-700">
+          12 days passed / 28 days remaining
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
