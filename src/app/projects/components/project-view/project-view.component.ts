@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Task } from '../../../models/task.model';
 
 @Component({
   selector: 'app-project-view',
@@ -8,4 +9,9 @@ import { Component } from '@angular/core';
 })
 export class ProjectViewComponent {
 
+  @Input() tasksGroupedByState : Record<string, Task[]> | null = {};
+
+hasTasks(): boolean {
+  return Object.values(this.tasksGroupedByState || {}).some(tasks => tasks.length > 0);
+}
 }

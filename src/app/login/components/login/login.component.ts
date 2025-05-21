@@ -1,20 +1,17 @@
 import { Component } from '@angular/core';
-import { LoginFormComponent } from "../../components/login-form/login-form.component";
-import { LoginRequest } from '../../../../models/loginRequest.model';
+import { LoginRequest } from '../../../models/loginRequest.model';
 import { Router } from '@angular/router';
-import { AuthDataService } from '../../../../services/auth-data-service/auth-data.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [LoginFormComponent],
-  standalone: true,
+  imports: [],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-
 export class LoginComponent {
   loginFailed: boolean = false;
-  constructor(private authService :  AuthDataService, private router : Router) {}
+  constructor(private authService :  AuthService, private router : Router) {}
 
   onLoginSubmit(loginRequest: LoginRequest): void {
     this.authService.authenticate(loginRequest).subscribe({

@@ -1,11 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { Task } from '../../models/task.model';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-panel-board',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './panel-board.component.html',
   styleUrl: './panel-board.component.css'
 })
