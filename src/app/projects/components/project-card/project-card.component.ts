@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Project } from '../../../models/project.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-card',
@@ -12,12 +14,11 @@ export class ProjectCardComponent {
     projectName: '',
     projectDescription: '',
     workflowId: 0,
-    projectKey: ''
   }
 
  constructor(private route : Router) {}
 
  viewProject() {
-  this.route.navigate(['/viewProject', this.project.id]);
+  this.route.navigate(['projects/viewProject', this.project.id]);
  }
 }

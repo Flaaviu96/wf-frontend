@@ -30,7 +30,7 @@
       </div>
       <div class="flex space-x-5 mt-15">
         <div *ngIf ="hasTasks">
-            <div *ngFor ="let group of tasksGroupedByState | keyvalue">
+            <div *ngFor ="let group of projectData?.tasksGroupedByState | keyvalue">
                 <app-panel-board [state]="group.key" [tasks]="group.value"></app-panel-board>
             </div>
         </div>

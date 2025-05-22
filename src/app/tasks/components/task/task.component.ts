@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TaskService } from '../../services/task.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-task',
@@ -9,7 +10,13 @@ import { TaskService } from '../../services/task.service';
 })
 export class TaskComponent {
 
-  constructor(private taskService : TaskService) {}
+  constructor(private taskService : TaskService, private route: ActivatedRoute) {}
 
-  
+  ngOnInit() {
+    const taskId = this.route.snapshot.paramMap.get('id')!;
+    this.getTasksGrouped(taskId)
+  }
+
+  getTasksGrouped(taskId : string) {
+  }
 }

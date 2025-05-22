@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoginRequest } from '../../../models/loginRequest.model';
-
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-login-view',
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login-view.component.html',
   styleUrl: './login-view.component.css'
 })

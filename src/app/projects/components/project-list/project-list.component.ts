@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Project } from '../../../models/project.model';
 import { ProjectService } from '../../services/project.service';
-
+import { ProjectCardComponent } from '../project-card/project-card.component';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-project-list',
-  imports: [],
+  imports: [ProjectCardComponent, CommonModule],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.css'
 })
@@ -16,7 +17,6 @@ export class ProjectListComponent {
 
   ngOnInit() : void {
     this.getAvailableProjects();
-    console.log(this.projects);
   }
 
   getAvailableProjects() {

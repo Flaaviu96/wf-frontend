@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-task-view',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './task-view.component.html',
   styleUrl: './task-view.component.css'
 })

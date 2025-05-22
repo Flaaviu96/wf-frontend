@@ -14,7 +14,7 @@ export class AuthService {
   constructor(private apiService : ApiService) {}
 
   authenticate(loginRequest : LoginRequest) : Observable<String> {
-    return this.apiService.post<string>(enviroment.apiAuthenticateUrl, loginRequest);
+    return this.apiService.post<string>(enviroment.apiAuthenticateUrl, loginRequest, {withCredentials: true});
     }
     
     login() {
