@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Creează Proiect Nou</h2>
+
+<mat-dialog-content class="mat-typography" style="min-width: 350px; padding-bottom: 20px;" [formGroup]="projectForm">
+  <div style="display: flex; flex-direction: column; gap: 15px;">
+    <h3>Introdu detaliile noului proiect:</h3>
+
+    <div>
+      <label for="projectName" class="text-gray-700 text-base font-medium mb-1 block">Nume Proiect</label>
+      <mat-form-field appearance="outline" class="w-full">
+        <input matInput id="projectName" formControlName = "projectName" placeholder="Ex: Aplicație CRM" required>
+        <mat-icon matSuffix fontIcon="work"></mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <label for="projectDescription" class="text-gray-700 text-base font-medium mb-1 block">Descriere</label>
+      <mat-form-field appearance="outline" class="w-full">
+        <textarea matInput id="projectDescription" formControlName="projectDescription" placeholder="Ex: Dezvoltarea unei platforme web pentru managementul clienților." rows="4"></textarea>
+        <mat-icon matSuffix fontIcon="description"></mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <label for="projectOwner" class="text-gray-700 text-base font-medium mb-1 block">Owner (Responsabil)</label>
+      <mat-form-field appearance="outline" class="w-full">
+        <input matInput id="projectOwner" formControlName="projectOwner" placeholder="Ex: Ion Popescu" required>
+        <mat-icon matSuffix fontIcon="person"></mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" style="padding-top: 20px; padding-bottom: 10px;">
+  <button mat-button mat-dialog-close color="warn">Anulează</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true" cdkFocusInitial>Creează Proiect</button>
+</mat-dialog-actions>

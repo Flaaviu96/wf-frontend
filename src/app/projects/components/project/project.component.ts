@@ -12,15 +12,18 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProjectComponent {
  projectData: { projectName: string, tasksGroupedByState: Record<string, Task[]> } | null = null;
-
+ projectId : string = '';
   constructor(
     private projectService: ProjectService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    const projectId = this.route.snapshot.paramMap.get('projectId')!;
-    this.getProjectWithTasks(projectId);
+    const id = this.route.snapshot.paramMap.get('projectId')!;
+    if (id) {
+      this.projectId = id;
+      this.getProjectWithTasks(this.projectId);
+    }
   }
 
   getProjectWithTasks(projectId: string): void {

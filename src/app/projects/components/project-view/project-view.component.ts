@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Task } from '../../../models/task.model';
 import { PanelBoardComponent } from '../../../shared/components/panel-board/panel-board.component';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-project-view',
   imports: [PanelBoardComponent, CommonModule],
@@ -10,16 +11,16 @@ import { CommonModule } from '@angular/common';
 })
 export class ProjectViewComponent {
   @Input() projectData: { projectName: string, tasksGroupedByState: Record<string, Task[]> } | null = null;
-
-
+  @Input() projectId : string = '';
+  constructor(private route : Router) {}
+  
   hasTasks(): boolean {
   return Object.values(this.projectData?.tasksGroupedByState || {}).some(
     (tasks) => tasks.length > 0
   );
 }
 
-  test(taskId : number) {
-    console.log();
+  taskClicked(taskId : number) {
+    this.route.navigate(['tasks', this.projectId, 'viewTask', taskId]);
   }
-
 }

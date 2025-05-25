@@ -1,28 +1,24 @@
-<nav class="bg-blue-800 text-white px-4 py-3 flex items-center justify-between">
-    <div class="text-xl font-bold">Workforge</div>
-  
-    <div class="hidden md:flex space-x-4">
-      <a routerLink="/" class="hover:text-gray-300">Home</a>
-      <a routerLink="/about" class="hover:text-gray-300">About</a>
-      <a routerLink="/services" class="hover:text-gray-300">Services</a>
-      <a routerLink="/contact" class="hover:text-gray-300">Contact</a>
-    </div>
-  
-    <div class="md:hidden">
-      <button (click)="toggleMenu()" class="focus:outline-none">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-             viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round"
-                d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-    </div>
-  </nav>
-  
-  <div *ngIf="isMenuOpen" class="md:hidden px-4 py-2 space-y-2 bg-gray-700 text-white">
-    <a routerLink="/" class="block hover:text-gray-300">Home</a>
-    <a routerLink="/about" class="block hover:text-gray-300">About</a>
-    <a routerLink="/services" class="block hover:text-gray-300">Services</a>
-    <a routerLink="/contact" class="block hover:text-gray-300">Contact</a>
-  </div>
-  
+
+    <nav class="bg-white text-gray-800 p-4 shadow-sm border-b border-gray-200 flex items-center justify-between">
+        <div class="flex items-center">
+            <span class="text-2xl font-bold text-blue-700 mr-4">Workforge</span>
+            <div class="hidden md:flex space-x-6 text-gray-600">
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200 font-medium">Your work</a>
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200 font-medium">Projects</a>
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200 font-medium">Filters</a>
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200 font-medium">Dashboards</a>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <input type="text" placeholder="Search" class="p-2 rounded-md bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder-gray-500 text-sm">
+            <a href="#" class="text-gray-500 hover:text-blue-700 transition-colors duration-200">
+                <i class="fas fa-bell text-lg"></i>
+            </a>
+            <a href="#" class="text-gray-500 hover:text-blue-700 transition-colors duration-200">
+                <i class="fas fa-question-circle text-lg"></i>
+            </a>
+            <a href="#" class="text-gray-500 hover:text-blue-700 transition-colors duration-200">
+                <i class="fas fa-user-circle text-xl"></i>
+            </a>
+        </div>
+    </nav>

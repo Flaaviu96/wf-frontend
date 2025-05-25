@@ -15,9 +15,7 @@ constructor(private apiService : ApiService) { }
     getTasksGroupedByState(projectKey : string) :  Observable<{ projectName: string, tasksGroupedByState: Record<string, Task[]> }> {
     return this.getProjectWithTasks(projectKey).pipe(
       map((project : Project) => {
-        console.log("map");
         const tasks = project.tasks ?? [];
-        console.log("nume" +project.tasks);
         const tasksGroupedByState = tasks.reduce((result: Record<string, Task[]>, task: Task) => {
           const state = task.state;
            (result[state] = result[state] || []).push(task);

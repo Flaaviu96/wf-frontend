@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Task } from '../../../models/task.model';
 @Component({
   selector: 'app-task-view',
   imports: [CommonModule],
@@ -7,19 +8,16 @@ import { CommonModule } from '@angular/common';
   styleUrl: './task-view.component.css'
 })
 export class TaskViewComponent {
- task = {
-    taskName: 'Example Task',
-    description: 'This is a sample task description.',
-    assignee: 'John Doe',
-    status: 'In Progress',
-    attachments: [
-      { thumbnailUrl: 'https://via.placeholder.com/40?text=Doc1' },
-      { thumbnailUrl: 'https://via.placeholder.com/40?text=Img2' },
-      { thumbnailUrl: 'https://via.placeholder.com/40?text=Pdf3' },
-      { thumbnailUrl: 'https://via.placeholder.com/40?text=File4' },
-      { thumbnailUrl: 'https://via.placeholder.com/40?text=Zip5' },
-      { thumbnailUrl: 'https://via.placeholder.com/40?text=Img6' },
-      { thumbnailUrl: 'https://via.placeholder.com/40?text=Doc7' },
-    ]
-  };
+  possibleStates: string[] = ['To Do', 'In Progress', 'Done', 'Testing', 'Blocked'];
+  @Input() taskDetails : Task | null = null;
+  
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+  onStateChange(event: Event): void {
+    const selectedState = (event.target as HTMLSelectElement).value;
+    console.log('Noua stare selectată:', selectedState);
+  }
 }
