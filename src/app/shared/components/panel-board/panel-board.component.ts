@@ -19,4 +19,8 @@ export class PanelBoardComponent {
   showTask(taskId: number): void {
     this.taskClicked.emit(taskId);
   }
+
+  getLength() : number {
+    return this.tasks.length;
+  }
 }

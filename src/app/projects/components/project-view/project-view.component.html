@@ -1,40 +1,108 @@
-<div class="flex h-screen">
-    <!-- Left Sidebar -->
-    <div class="w-xs border-r border-gray-300 p-4 overflow-y-auto bg-gray-100 flex items-center space-y-5 flex-col">
-      <h2 class="text-xl font-bold mt-20 mb-20">Tasks</h2>
-      <button class="btn-icon rounded-lg flex items-center gap-3 bg-white-100 px-4 py-2 border-none cursor-pointer transition-colors duration-300 hover:bg-blue-200 hover:text-blue-500 w-full">
-        <img src="assets/icons/board.svg" alt="Jira Board" class="w-8 h-8" />
-        <span class="text-sm font-semibold">Board</span>
-      </button>
-  
-      <button class="btn-icon rounded-lg flex items-center gap-3 bg-white-100 px-4 py-2 border-none cursor-pointer transition-colors duration-300 hover:bg-blue-200 hover:text-blue-500 w-full">
-        <img src="assets/icons/list.png" alt="Jira Board" class="w-8 h-8" />
-        <span class="text-sm font-semibold">Tasks</span>
-      </button>
-          <button class="btn-icon rounded-lg flex items-center gap-3 bg-white-100 px-4 py-2 border-none cursor-pointer transition-colors duration-300 hover:bg-blue-200 hover:text-blue-500 w-full">
-          <img src="assets/icons/settings.png" alt="Jira Board" class="w-8 h-8" />
-          <span class="text-sm font-semibold">Settings</span>
-        </button>
-    </div>
-  
-    <!-- Right Content Area -->
-    <div class="flex-1 p-6">
-      <h2 class="text-2xl font-bold mb-4">Board</h2>
-      <div *ngIf="!hasTasks" class="flex h-[400px] items-center justify-center">
-        <button
-          class="btn-icon mt-100 rounded-lg flex flex-col items-center gap-3 bg-white px-4 py-4 border-none cursor-pointer transition-colors duration-300"
-        >
-          <img src="assets/icons/no-task.png" alt="Jira Board" class="w-24 h-24" />
-          <span class="text-sm font-semibold">No tasks available for the board</span>
-        </button>
-      </div>
-      <div class="flex space-x-5 mt-15">
-        <div *ngIf ="hasTasks">
-            <div *ngFor ="let group of projectData?.tasksGroupedByState | keyvalue">
-                <app-panel-board [state]="group.key" [tasks]="group.value"></app-panel-board>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizualizare Proiect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Custom CSS to hide scrollbar for a cleaner look */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        /* Optional: Custom font */
+        body {
+            font-family: 'Inter', sans-serif; /* Asigură-te că fontul Inter este importat sau folosește un font fallback */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased flex flex-col h-screen">
+
+    <nav class="bg-white text-gray-800 p-4 shadow-sm border-b border-gray-200 flex items-center justify-between">
+        <div class="flex items-center">
+            <span class="text-2xl font-bold text-blue-700 mr-4">Workforge</span>
+            <div class="hidden md:flex space-x-6 text-gray-600">
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200 font-medium">Your work</a>
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200 font-medium">Projects</a>
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200 font-medium">Filters</a>
+                <a href="#" class="hover:text-blue-700 transition-colors duration-200 font-medium">Dashboards</a>
             </div>
         </div>
-      </div>
+        <div class="flex items-center space-x-4">
+            <input type="text" placeholder="Search" class="p-2 rounded-md bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder-gray-500 text-sm">
+            <a href="#" class="text-gray-500 hover:text-blue-700 transition-colors duration-200">
+                <i class="fas fa-bell text-lg"></i>
+            </a>
+            <a href="#" class="text-gray-500 hover:text-blue-700 transition-colors duration-200">
+                <i class="fas fa-question-circle text-lg"></i>
+            </a>
+            <a href="#" class="text-gray-500 hover:text-blue-700 transition-colors duration-200">
+                <i class="fas fa-user-circle text-xl"></i>
+            </a>
+        </div>
+    </nav>
+
+    <div class="flex flex-1">
+        <aside class="w-64 bg-gray-100 text-gray-800 flex flex-col p-4 shadow-md border-r border-gray-200">
+            <div class="text-2xl font-bold mb-8 text-center text-blue-700">
+                Project Menu
+            </div>
+            <nav>
+                <ul>
+                    <li class="mb-2">
+                        <a href="#" class="flex items-center p-2 rounded-md hover:bg-gray-200 transition-colors duration-200 text-gray-700 hover:text-blue-700">
+                            <i class="fas fa-clipboard-list mr-3 text-blue-600"></i>
+                            <span class="text-lg">Board</span>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="flex items-center p-2 rounded-md hover:bg-gray-200 transition-colors duration-200 text-gray-700 hover:text-blue-700">
+                            <i class="fas fa-tasks mr-3 text-blue-600"></i>
+                            <span class="text-lg">Tasks</span>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="flex items-center p-2 rounded-md hover:bg-gray-200 transition-colors duration-200 text-gray-700 hover:text-blue-700">
+                            <i class="fas fa-cog mr-3 text-blue-600"></i>
+                            <span class="text-lg">Settings</span>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="flex items-center p-2 rounded-md hover:bg-gray-200 transition-colors duration-200 text-gray-700 hover:text-blue-700">
+                            <i class="fas fa-file-alt mr-3 text-blue-600"></i>
+                            <span class="text-lg">Reports</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-8 overflow-auto scrollbar-hide bg-gray-50">
+            <h1 class="text-3xl font-bold text-gray-800 mb-8">Kanban Board</h1>
+
+            <div *ngIf="projectData && projectData.tasksGroupedByState; else noProjectData">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div *ngFor="let tasksGroup of projectData.tasksGroupedByState | keyvalue">
+                        <app-panel-board [tasks]="tasksGroup.value" [state]="tasksGroup.key"></app-panel-board>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #noProjectData>
+                <div class="flex flex-col items-center justify-center p-8 bg-white rounded-xl shadow-lg w-full max-w-md mx-auto mt-12">
+                    <p class="text-gray-700 text-xl font-medium mb-4">Nu există date de proiect disponibile.</p>
+                    <p class="text-gray-500 text-base text-center">
+                        Asigură-te că proiectul a fost selectat și că datele sunt încărcate corect.
+                    </p>
+                </div>
+            </ng-template>
+        </main>
     </div>
-  </div>
-  
+
+</body>
+</html>

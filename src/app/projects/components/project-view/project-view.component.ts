@@ -18,4 +18,8 @@ export class ProjectViewComponent {
   );
 }
 
+  test(taskId : number) {
+    console.log();
+  }
+
 }
