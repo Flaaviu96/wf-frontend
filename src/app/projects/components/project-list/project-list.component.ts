@@ -1,18 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { Project } from '../../../models/project.model';
 import { ProjectService } from '../../services/project.service';
-import { ProjectCardComponent } from '../project-card/project-card.component';
 import { CommonModule } from '@angular/common';
-import {MatDialog} from '@angular/material/dialog';
-import { ProjectCreateDialogComponent } from '../project-create-dialog/project-create-dialog.component';
+import { ProjectListViewComponent } from '../project-list-view/project-list-view.component';
 @Component({
   selector: 'app-project-list',
-  imports: [ProjectCardComponent, CommonModule],
+  imports: [CommonModule, ProjectListViewComponent],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.css'
 })
 export class ProjectListComponent {
-  readonly dialog = inject(MatDialog);
   projects : Project[] = []
 
   constructor(private projectService : ProjectService) {}
@@ -30,11 +27,5 @@ export class ProjectListComponent {
         console.error("Error loading projects"+err);
       }
     })
-  }
-
-  createNewProject() {
-    this.dialog.open(ProjectCreateDialogComponent, {
-      width: '500px'
-    });
   }
 }

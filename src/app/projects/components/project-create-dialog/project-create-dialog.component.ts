@@ -34,4 +34,8 @@ export class ProjectCreateDialogComponent {
       projectOwner : ['', Validators.required]
     })
   }
+
+  createProject() {
+    this.dialogRef.close(this.projectForm.value);
+  }
 }
