@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Project } from '../../../models/project.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectCreateDialogComponent } from '../project-create-dialog/project-create-dialog.component';
@@ -14,14 +14,15 @@ import { CommonModule } from '@angular/common';
 export class ProjectListViewComponent {
   readonly dialog = inject(MatDialog);
   @Input() projects : Project[] = [];
+  @Output() projectCreated = new EventEmitter<Project>();
 
     createNewProject() {
     const dialogRef = this.dialog.open(ProjectCreateDialogComponent, {
       width: '500px'
     });
-    dialogRef.afterClosed().subscribe( (newProject : Project) => {
+    dialogRef.afterClosed().subscribe((newProject : Project) => {
       if(newProject) {
-        console.log('tessst');
+        this.projectCreated.emit(newProject);
       }
     })
   }

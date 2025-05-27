@@ -10,17 +10,21 @@ import { Router } from '@angular/router';
   styleUrl: './project-view.component.css',
 })
 export class ProjectViewComponent {
-  @Input() projectData: { projectName: string, tasksGroupedByState: Record<string, Task[]> } | null = null;
-  @Input() projectId : string = '';
-  constructor(private route : Router) {}
-  
-  hasTasks(): boolean {
-  return Object.values(this.projectData?.tasksGroupedByState || {}).some(
-    (tasks) => tasks.length > 0
-  );
-}
+  @Input() projectData: {
+    projectName: string;
+    tasksGroupedByState: Record<string, Task[]>;
+  } | null = null;
 
-  taskClicked(taskId : number) {
+  @Input() projectId: string = '';
+  constructor(private route: Router) {}
+
+  hasTasks(): boolean {
+    return Object.values(this.projectData?.tasksGroupedByState || {}).some(
+      (tasks) => tasks.length > 0
+    );
+  }
+
+  taskClicked(taskId: number) {
     this.route.navigate(['tasks', this.projectId, 'viewTask', taskId]);
   }
 }

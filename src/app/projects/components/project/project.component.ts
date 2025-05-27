@@ -3,6 +3,7 @@ import { ProjectService } from '../../services/project.service';
 import { ProjectViewComponent } from '../project-view/project-view.component';
 import { Task } from '../../../models/task.model';
 import { ActivatedRoute } from '@angular/router';
+import { Project } from '../../../models/project.model';
 
 @Component({
   selector: 'app-project',

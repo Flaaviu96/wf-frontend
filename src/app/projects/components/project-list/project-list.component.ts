@@ -11,7 +11,7 @@ import { ProjectListViewComponent } from '../project-list-view/project-list-view
 })
 export class ProjectListComponent {
   projects : Project[] = []
-
+  newProject : Project | null = null;
   constructor(private projectService : ProjectService) {}
 
   ngOnInit() : void {
@@ -27,5 +27,10 @@ export class ProjectListComponent {
         console.error("Error loading projects"+err);
       }
     })
+  }
+
+  handleNewProject(project : Project) {
+    this.newProject = project;
+    console.log(this.newProject);
   }
 }
