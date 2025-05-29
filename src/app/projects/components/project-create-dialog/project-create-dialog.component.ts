@@ -7,10 +7,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {Validators} from '@angular/forms';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'; 
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserSearchSelectComponent } from "../../../shared/components/user-search-select/user-search-select.component"; 
 @Component({
   selector: 'app-project-create-dialog',
-  imports: [       MatDialogModule,
+  imports: [MatDialogModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
@@ -18,7 +19,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
     MatDatepickerModule,
     MatNativeDateModule,
     FormsModule,
-    ReactiveFormsModule],
+    UserSearchSelectComponent,
+    ReactiveFormsModule, UserSearchSelectComponent],
   templateUrl: './project-create-dialog.component.html',
   styleUrl: './project-create-dialog.component.css'
 })

@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { User } from '../../../models/user.model';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-user-search-select',
@@ -23,12 +23,27 @@ export class UserSearchSelectComponent {
   ngOnInit() {
     this.searchUsers.valueChanges.pipe(
       debounceTime(300),
+      filter((name): name is string => !!name && name.length > 2),
       distinctUntilChanged(),
+      tap(name => console.log('Valoare tastată:', name)),
       switchMap(name => this.userService.searchUsers(name ?? ''))
-    )
+    ).subscribe({
+      next: (users) => {
+        this.users = users;
+        console.log(this.users);
+      },
+      error: (err) => {
+        console.log('Error');
+      }
+    })
   }
 
   onSelect(username : string) {
 
   }
+
+  displayUserFn(user: User): string {
+  return user && user.username ? user.username : '';
+}
+
 }

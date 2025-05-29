@@ -22,10 +22,7 @@
 
     <div>
       <label for="projectOwner" class="text-gray-700 text-base font-medium mb-1 block">Owner (Responsabil)</label>
-      <mat-form-field appearance="outline" class="w-full">
-        <input matInput id="projectOwner" formControlName="projectOwner" placeholder="Ex: Ion Popescu" required>
-        <mat-icon matSuffix fontIcon="person"></mat-icon>
-      </mat-form-field>
+      <app-user-search-select></app-user-search-select>
     </div>
   </div>
 </mat-dialog-content>

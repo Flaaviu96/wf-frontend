@@ -1,6 +1,6 @@
     <mat-form-field appearance="outline" class="w-full">
       <input type="text" matInput placeholder="Caută utilizator" [formControl]="searchUsers" [matAutocomplete]="auto" />
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value)">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUserFn" (optionSelected)="onSelect($event.option.value)">
         <mat-option *ngFor="let user of users" [value]="user">
           {{ user.username }}
         </mat-option>
