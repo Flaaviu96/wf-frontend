@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TaskService } from '../../services/task.service';
+import { TaskService } from '../../services/task/task.service';
 import { ActivatedRoute } from '@angular/router';
 import { Task } from '../../../models/task.model';
 import { TaskViewComponent } from "../task-view/task-view.component";
@@ -12,12 +12,14 @@ import { TaskViewComponent } from "../task-view/task-view.component";
 })
 export class TaskComponent {
   task : Task | null = null;
+  private file : File | null = null;
+  private projectId : string | null = null;
   constructor(private taskService : TaskService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     const taskId = this.route.snapshot.paramMap.get('taskId')!;
-    const projectId = this.route.snapshot.paramMap.get('projectId')!;
-    this.taskService.getTask(projectId, taskId).subscribe({
+    this.projectId = this.route.snapshot.paramMap.get('projectId')!;
+    this.taskService.getTask(this.projectId, taskId).subscribe({
        next: (task : Task) => {
         this.task = task;
       },
@@ -25,5 +27,9 @@ export class TaskComponent {
         console.error('Failed to fetch project tasks', err);
       },
     });
+  }
+
+  testCeva(file : File) {
+    console.log("From Taskcomponent"+ file.name);
   }
 }

@@ -3,6 +3,7 @@ import { Project } from '../../../models/project.model';
 import { ProjectService } from '../../services/project.service';
 import { CommonModule } from '@angular/common';
 import { ProjectListViewComponent } from '../project-list-view/project-list-view.component';
+import { createNewProject } from '../../../models/createProject.model';
 @Component({
   selector: 'app-project-list',
   imports: [CommonModule, ProjectListViewComponent],
@@ -11,7 +12,7 @@ import { ProjectListViewComponent } from '../project-list-view/project-list-view
 })
 export class ProjectListComponent {
   projects : Project[] = []
-  newProject : Project | null = null;
+  newProject : createNewProject | null = null;
   constructor(private projectService : ProjectService) {}
 
   ngOnInit() : void {
@@ -20,17 +21,12 @@ export class ProjectListComponent {
 
   getAvailableProjects() {
     this.projectService.getAvailableProjects().subscribe({
-      next : (data : Project[]) =>{
+      next : (data : Project[]) => {
         this.projects = data;
       },
       error: (err) => {
         console.error("Error loading projects"+err);
       }
     })
-  }
-
-  handleNewProject(project : Project) {
-    this.newProject = project;
-    console.log(this.newProject);
   }
 }

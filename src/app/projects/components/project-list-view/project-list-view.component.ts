@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProjectCreateDialogComponent } from '../project-create-dialog/project-create-dialog.component';
 import { ProjectCardComponent } from '../project-card/project-card.component';
 import { CommonModule } from '@angular/common';
+import { createNewProject } from '../../../models/createProject.model';
 
 @Component({
   selector: 'app-project-list-view',
@@ -14,15 +15,14 @@ import { CommonModule } from '@angular/common';
 export class ProjectListViewComponent {
   readonly dialog = inject(MatDialog);
   @Input() projects : Project[] = [];
-  @Output() projectCreated = new EventEmitter<Project>();
 
     createNewProject() {
     const dialogRef = this.dialog.open(ProjectCreateDialogComponent, {
-      width: '500px'
+      width: '600px'
     });
     dialogRef.afterClosed().subscribe((newProject : Project) => {
       if(newProject) {
-        this.projectCreated.emit(newProject);
+        this.projects.push(newProject)
       }
     })
   }

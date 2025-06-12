@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from '../../core/services/api.service';
-import { enviroment } from '../../enviroment';
-import { Task } from '../../models/task.model';
+import { ApiService } from '../../../core/services/api.service';
+import { enviroment } from '../../../enviroment';
+import { Task } from '../../../models/task.model';
 import { map, Observable } from 'rxjs';
 
 @Injectable({

@@ -13,7 +13,6 @@ export class UserService {
 
 
   searchUsers(username : string) : Observable<User[]> {
-    console.log(username);
     return this.http.get(enviroment.apiUserSearchUrl, {
       withCredentials: true,
       params: {search : username}

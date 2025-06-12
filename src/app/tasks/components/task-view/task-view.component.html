@@ -2,7 +2,7 @@
   <div class="max-w-6xl w-full">
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
       <h1 class="text-4xl font-extrabold text-gray-900 mb-4 md:mb-0">
-        Rezolvă Bug-ul de Autentificare
+        {{ taskDetails?.taskName }}
       </h1>
       <div class="flex flex-wrap gap-3">
         <button
@@ -13,21 +13,35 @@
         <button
           class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg shadow hover:bg-gray-300 transition duration-300 flex items-center"
         >
-          <i class="fas fa-user-plus mr-2"></i> Asignează
+          <i class="fas fa-user-plus mr-2"></i> Assigne
         </button>
 
         <div class="relative inline-block text-left">
           <select
             (change)="onStateChange($event)"
-            class="block appearance-none w-full bg-purple-600 text-white px-5 py-2 pr-8 rounded-lg shadow hover:bg-purple-700 transition duration-300 flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            class="block appearance-none w-full bg-blue-600 text-white px-5 py-2 pr-8 rounded-lg shadow hover:bg-blue-700 transition duration-300 flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             aria-label="Selectează Starea Task-ului"
           >
-            <option value="" disabled selected>Mută în...</option> <option *ngFor="let stateOption of possibleStates" [value]="stateOption">
+            <option value="" disabled selected>Change in</option>
+            <option
+              *ngFor="let stateOption of possibleStates"
+              [value]="stateOption"
+            >
               {{ stateOption }}
             </option>
           </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
-            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.043 6.871 4.629 8.285z"/></svg>
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white"
+          >
+            <svg
+              class="fill-current h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.043 6.871 4.629 8.285z"
+              />
+            </svg>
           </div>
         </div>
       </div>
@@ -35,23 +49,28 @@
 
     <div class="flex flex-col lg:flex-row gap-8">
       <div class="flex-1 bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6">
-        <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">Detalii Task</h2>
+        <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
+          Task details
+        </h2>
 
         <p class="text-gray-700 text-lg">
-          <strong>Nume:</strong> Rezolvă Bug-ul de Autentificare
+          <strong>Name:</strong> {{ taskDetails?.taskName }}
         </p>
         <p class="text-gray-700 text-lg leading-relaxed">
-          <strong>Descriere:</strong> Utilizatorii raportează probleme la login după actualizarea recentă. Investigați log-urile și reparați cauza principală.
+          <strong>Description:</strong>
+          {{ taskDetails?.taskMetadataDTO?.description }}
         </p>
         <p class="text-gray-700 text-lg">
           <strong>Status:</strong>
-          <span class="ml-2 px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800">
-            În Progres
+          <span
+            class="ml-2 px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800"
+          >
+            {{ taskDetails?.state }}
           </span>
         </p>
 
         <div>
-          <h3 class="font-bold text-gray-800 text-xl mb-3">Atașamente</h3>
+          <h3 class="font-bold text-gray-800 text-xl mb-3">Attachments</h3>
           <div
             class="flex overflow-x-auto space-x-4 p-3 bg-gray-50 rounded-lg border border-gray-200 min-h-[100px] items-center attachments-scroll"
           >
@@ -79,66 +98,84 @@
               />
             </div>
           </div>
+          <div class="mt-5 flex items-center gap-4">
+            <input
+              type="file"
+              id="fileInput"
+              class="hidden"
+              (change)="onFileSelected($event)"
+            />
+
+            <label
+              for="fileInput"
+              class="cursor-pointer bg-blue-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200"
+            >
+              Upload File
+            </label>
+
+            <span
+              *ngIf="selectedFileName"
+              class="text-sm text-gray-600 truncate max-w-xs"
+            >
+              {{ selectedFileName }}
+            </span>
+          </div>
         </div>
 
         <div class="mt-8">
-          <h3 class="font-bold text-gray-800 text-xl mb-3">Adaugă un comentariu</h3>
+          <h3 class="font-bold text-gray-800 text-xl mb-3">Add a comment</h3>
           <textarea
             rows="4"
-            placeholder="Scrie un comentariu..."
+            placeholder="Write a comment..."
             class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 text-base"
           ></textarea>
           <div class="flex gap-4 mt-3 justify-end">
             <button
               class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 shadow"
             >
-              Salvează
+              Save
             </button>
             <button
               class="px-6 py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition duration-300 shadow"
             >
-              Anulează
+              Cancel
             </button>
           </div>
         </div>
 
-        <div class="bg-gray-50 rounded-lg p-6 shadow-inner max-h-96 overflow-y-auto mt-8 scrollbar-hide">
-          <h3 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">Comentarii (2)</h3>
-          <div class="mb-4 pb-4 border-b border-gray-200 last:border-b-0">
-            <p class="text-sm text-gray-700 mb-1">
-              <strong class="font-medium">Andrei Popescu</strong>
-              <span class="ml-2 text-xs text-gray-500">22 mai 2025 la 10:30</span>
-            </p>
-            <p class="text-gray-800 leading-snug text-base">Am investigat și pare a fi o problemă cu token-ul JWT la reîmprospătare. Voi propune o soluție mâine.</p>
-          </div>
-          <div class="mb-4 pb-4 border-b border-gray-200 last:border-b-0">
-            <p class="text-sm text-gray-700 mb-1">
-              <strong class="font-medium">Maria Ionescu</strong>
-              <span class="ml-2 text-xs text-gray-500">22 mai 2025 la 14:15</span>
-            </p>
-            <p class="text-gray-800 leading-snug text-base">Super! Aștept soluția. Mă bucur că ați găsit cauza.</p>
+        <div
+          class="bg-gray-50 rounded-lg p-6 shadow-inner max-h-96 overflow-y-auto mt-8 scrollbar-hide"
+        >
+          <h3 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
+            Comments
+          </h3>
+          <div *ngFor="let currentComment of taskDetails?.commentDTOS">
+            <app-comment [appComment]="currentComment"></app-comment>
           </div>
         </div>
       </div>
 
-      <div class="w-full lg:w-80 bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6 flex-shrink-0">
-        <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">Informații Task</h2>
+      <div
+        class="w-full lg:w-80 bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6 flex-shrink-0"
+      >
+        <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
+          Time details
+        </h2>
 
-        <p class="text-gray-700">
-          <strong>Responsabil:</strong> Andrei Popescu
-        </p>
-        <p class="text-gray-700">
-          <strong>Creat la:</strong> 20 mai 2025
-        </p>
-        <p class="text-gray-700">
-          <strong>Ultima actualizare:</strong> 22 mai 2025
-        </p>
+        <p class="text-gray-700"><strong>Assigned:</strong> Andrei Popescu</p>
+        <p class="text-gray-700"><strong>Created date:</strong> 20 mai 2025</p>
+        <p class="text-gray-700"><strong>Last modified:</strong> 22 mai 2025</p>
 
-        <h3 class="text-xl font-bold text-gray-800 mt-5 border-b pb-4">Urmărire Timp</h3>
+        <h3 class="text-xl font-bold text-gray-800 mt-5 border-b pb-4">
+          Urmărire Timp
+        </h3>
 
         <div class="w-full">
           <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 60%"></div>
+            <div
+              class="bg-blue-600 h-2.5 rounded-full"
+              style="width: 60%"
+            ></div>
           </div>
 
           <p class="mt-2 text-sm text-gray-700">

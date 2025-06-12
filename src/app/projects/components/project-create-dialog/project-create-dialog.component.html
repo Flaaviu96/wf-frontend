@@ -1,33 +1,36 @@
-<h2 mat-dialog-title>Creează Proiect Nou</h2>
+<h2 mat-dialog-title>Create a new project</h2>
 
 <mat-dialog-content class="mat-typography" style="min-width: 350px; padding-bottom: 20px;" [formGroup]="projectForm">
   <div style="display: flex; flex-direction: column; gap: 15px;">
-    <h3>Introdu detaliile noului proiect:</h3>
+    <h3>Introduce the new details of the project:</h3>
 
     <div>
-      <label for="projectName" class="text-gray-700 text-base font-medium mb-1 block">Nume Proiect</label>
+      <label for="projectName" class="text-gray-700 text-base font-medium mb-1 block">Project name</label>
       <mat-form-field appearance="outline" class="w-full">
-        <input matInput id="projectName" formControlName = "projectName" placeholder="Ex: Aplicație CRM" required>
+        <input matInput id="projectName" formControlName = "projectName" required>
         <mat-icon matSuffix fontIcon="work"></mat-icon>
       </mat-form-field>
     </div>
 
     <div>
-      <label for="projectDescription" class="text-gray-700 text-base font-medium mb-1 block">Descriere</label>
+      <label for="projectDescription" class="text-gray-700 text-base font-medium mb-1 block">Description</label>
       <mat-form-field appearance="outline" class="w-full">
-        <textarea matInput id="projectDescription" formControlName="projectDescription" placeholder="Ex: Dezvoltarea unei platforme web pentru managementul clienților." rows="4"></textarea>
+        <textarea matInput id="projectDescription" formControlName="projectDescription" rows="4"></textarea>
         <mat-icon matSuffix fontIcon="description"></mat-icon>
       </mat-form-field>
     </div>
 
     <div>
-      <label for="projectOwner" class="text-gray-700 text-base font-medium mb-1 block">Owner (Responsabil)</label>
-      <app-user-search-select></app-user-search-select>
+      <label for="projectOwner" class="text-gray-700 text-base font-medium mb-1 block">Project owner</label>
+      <app-user-search-select (selectedUser)="selectedProjectOwner($event)"></app-user-search-select>
     </div>
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end" style="padding-top: 20px; padding-bottom: 10px;">
-  <button mat-button mat-dialog-close color="warn">Anulează</button>
-  <button mat-raised-button (click)="createProject()" color="primary" [mat-dialog-close]="true" cdkFocusInitial>Creează Proiect</button>
+  <button mat-button mat-dialog-close color="warn">Cancel</button>
+  <button mat-raised-button (click)="createProject()" color="primary" cdkFocusInitial>Create project</button>
 </mat-dialog-actions>
+<mat-error *ngIf="errorMessage" style="display: block; text-align: center;">
+  {{ errorMessage }}
+</mat-error>

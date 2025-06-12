@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +16,7 @@ import { UserService } from '../../services/user.service';
 export class UserSearchSelectComponent {
   searchUsers = new FormControl(' ');
   users : User[] = [];
+  @Output() selectedUser = new EventEmitter<string>();
 
 
   constructor(private userService : UserService) {}
@@ -25,12 +26,10 @@ export class UserSearchSelectComponent {
       debounceTime(300),
       filter((name): name is string => !!name && name.length > 2),
       distinctUntilChanged(),
-      tap(name => console.log('Valoare tastată:', name)),
       switchMap(name => this.userService.searchUsers(name ?? ''))
     ).subscribe({
       next: (users) => {
         this.users = users;
-        console.log(this.users);
       },
       error: (err) => {
         console.log('Error');
@@ -38,12 +37,11 @@ export class UserSearchSelectComponent {
     })
   }
 
-  onSelect(username : string) {
-
+  onSelect(user : User) {
+    this.selectedUser.emit(user.uuid);
   }
 
   displayUserFn(user: User): string {
   return user && user.username ? user.username : '';
 }
-
 }

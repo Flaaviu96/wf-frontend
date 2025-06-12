@@ -9,6 +9,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {Validators} from '@angular/forms';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserSearchSelectComponent } from "../../../shared/components/user-search-select/user-search-select.component"; 
+import { ProjectService } from '../../services/project.service';
+import { Project } from '../../../models/project.model';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-project-create-dialog',
   imports: [MatDialogModule,
@@ -20,15 +23,17 @@ import { UserSearchSelectComponent } from "../../../shared/components/user-searc
     MatNativeDateModule,
     FormsModule,
     UserSearchSelectComponent,
-    ReactiveFormsModule, UserSearchSelectComponent],
+    ReactiveFormsModule, UserSearchSelectComponent, CommonModule],
   templateUrl: './project-create-dialog.component.html',
   styleUrl: './project-create-dialog.component.css'
 })
 export class ProjectCreateDialogComponent {
   projectForm : FormGroup
+  errorMessage : string | null = null;
   constructor(
      public dialogRef: MatDialogRef<ProjectCreateDialogComponent>,
-    private fb : FormBuilder
+    private fb : FormBuilder,
+    private projectService : ProjectService
   ) {
     this.projectForm = this.fb.group({
       projectName: ['', Validators.required],
@@ -38,6 +43,19 @@ export class ProjectCreateDialogComponent {
   }
 
   createProject() {
-    this.dialogRef.close(this.projectForm.value);
+    this.projectService.saveNewProject(this.projectForm.value).subscribe({
+      next: (dataProject : Project) => {
+        this.dialogRef.close(dataProject);
+      },
+      error: (err) => {
+        this.errorMessage = err.error.message;
+      }
+    })
+  }
+
+  selectedProjectOwner(username : string) {
+    this.projectForm.patchValue({
+      projectOwner : username
+    })
   }
 }

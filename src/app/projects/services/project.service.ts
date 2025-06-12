@@ -4,12 +4,12 @@ import { map, Observable } from 'rxjs';
 import { Project } from '../../models/project.model';
 import { Task } from '../../models/task.model';
 import { enviroment } from '../../enviroment';
+import { createNewProject } from '../../models/createProject.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
-
 constructor(private apiService : ApiService) { }
 
     getTasksGroupedByState(projectKey : string) :  Observable<{ projectName: string, tasksGroupedByState: Record<string, Task[]> }> {
@@ -31,6 +31,10 @@ constructor(private apiService : ApiService) { }
 
   getAvailableProjects() : Observable<Project[]> {
     return this.getProjects();
+  }
+
+  saveNewProject(project : createNewProject) : Observable<Project> {
+    return this.apiService.post<Project>(`${enviroment.apiProjectUrl}`, project, {withCredentials: true});
   }
 
   private getProjectWithTasks(projectKey :  string) : Observable<Project> {
