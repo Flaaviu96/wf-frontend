@@ -12,17 +12,15 @@ import { createNewProject } from '../../models/createProject.model';
 export class ProjectService {
 constructor(private apiService : ApiService) { }
 
-    getTasksGroupedByState(projectKey : string) :  Observable<{ projectName: string, tasksGroupedByState: Record<string, Task[]> }> {
+    getTasksGroupedByState(projectKey : string) :  Observable<{ tasksGroupedByState: Record<string, Task[]> }> {
     return this.getProjectWithTasks(projectKey).pipe(
-      map((project : Project) => {
-        const tasks = project.tasks ?? [];
+      map((tasks : Task[]) => {
         const tasksGroupedByState = tasks.reduce((result: Record<string, Task[]>, task: Task) => {
           const state = task.state;
            (result[state] = result[state] || []).push(task);
            return result;
         }, {} as Record<string, Task[]>);
         return {
-          projectName: project.projectName,
           tasksGroupedByState
         };
       })
@@ -37,11 +35,15 @@ constructor(private apiService : ApiService) { }
     return this.apiService.post<Project>(`${enviroment.apiProjectUrl}`, project, {withCredentials: true});
   }
 
-  private getProjectWithTasks(projectKey :  string) : Observable<Project> {
-    return this.apiService.get<Project>(`${enviroment.apiProjectUrl}/${projectKey}/tasks`, {withCredentials: true});
+  private getProjectWithTasks(projectKey :  string) : Observable<Task[]> {
+    return this.apiService.get<Task[]>(`${enviroment.apiProjectUrl}/${projectKey}/tasks`, {withCredentials: true});
   }
 
   getProjects() : Observable<Project[]> {
     return this.apiService.get<Project[]>(enviroment.apiProjectUrl, {withCredentials: true});
+  }
+
+  getProjectId(projectKey : string) : Observable<string> {
+    return this.apiService.get<string>(`${enviroment.apiProjectUrl}/${projectKey}`, {withCredentials: true})
   }
 }

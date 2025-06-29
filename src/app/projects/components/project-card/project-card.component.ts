@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
 })
 export class ProjectCardComponent {
   @Input() project : Project = {
-    id: 0,
+    projectId: 0,
+    projectKey: '',
     projectName: '',
     projectDescription: '',
     workflowId: 0,
@@ -19,6 +20,6 @@ export class ProjectCardComponent {
  constructor(private route : Router) {}
 
  viewProject() {
-  this.route.navigate(['projects/viewProject', this.project.id]);
+  this.route.navigate(['projects/viewProject', this.project.projectKey]);
  }
 }

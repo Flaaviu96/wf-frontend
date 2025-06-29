@@ -4,7 +4,7 @@ import { TaskComponent } from './components/task/task.component';
 
 const routes: Routes = [
   {
-    path: ':projectId/viewTask/:taskId' , component: TaskComponent
+    path: ':projectKey/viewTask/:taskId' , component: TaskComponent
   }
 ];
 

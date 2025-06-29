@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { User } from '../../../models/user.model';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
-import { UserService } from '../../services/user.service';
+import { UserSearchAutocompleteService } from '../../services/user-autocomplete/user-search-autocomplete.service';
 @Component({
   selector: 'app-user-search-select',
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule], 
@@ -19,7 +19,7 @@ export class UserSearchSelectComponent {
   @Output() selectedUser = new EventEmitter<string>();
 
 
-  constructor(private userService : UserService) {}
+  constructor(private userService : UserSearchAutocompleteService) {}
 
   ngOnInit() {
     this.searchUsers.valueChanges.pipe(

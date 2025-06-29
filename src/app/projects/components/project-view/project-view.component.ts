@@ -10,21 +10,18 @@ import { Router } from '@angular/router';
   styleUrl: './project-view.component.css',
 })
 export class ProjectViewComponent {
-  @Input() projectData: {
-    projectName: string;
-    tasksGroupedByState: Record<string, Task[]>;
-  } | null = null;
+  @Input() tasksGroupedByState: Record<string, Task[]> | null = null;
 
-  @Input() projectId: string = '';
+  @Input() projectKey: string = '';
   constructor(private route: Router) {}
 
   hasTasks(): boolean {
-    return Object.values(this.projectData?.tasksGroupedByState || {}).some(
+    return Object.values(this.tasksGroupedByState || {}).some(
       (tasks) => tasks.length > 0
     );
   }
 
   taskClicked(taskId: number) {
-    this.route.navigate(['tasks', this.projectId, 'viewTask', taskId]);
+    this.route.navigate(['tasks', this.projectKey, 'viewTask', taskId]);
   }
 }

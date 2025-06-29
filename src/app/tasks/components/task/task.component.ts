@@ -3,6 +3,7 @@ import { TaskService } from '../../services/task/task.service';
 import { ActivatedRoute } from '@angular/router';
 import { Task } from '../../../models/task.model';
 import { TaskViewComponent } from "../task-view/task-view.component";
+import { ProjectCacheService } from '../../../shared/services/project-cache/project-cache.service';
 
 @Component({
   selector: 'app-task',
@@ -13,20 +14,29 @@ import { TaskViewComponent } from "../task-view/task-view.component";
 export class TaskComponent {
   task : Task | null = null;
   private file : File | null = null;
-  private projectId : string | null = null;
-  constructor(private taskService : TaskService, private route: ActivatedRoute) {}
+
+  constructor(
+    private taskService : TaskService,
+    private route: ActivatedRoute,
+    private projectCache : ProjectCacheService
+  ) {}
 
   ngOnInit() {
+    this.getTask();
+  }
+
+  getTask() {
     const taskId = this.route.snapshot.paramMap.get('taskId')!;
-    this.projectId = this.route.snapshot.paramMap.get('projectId')!;
-    this.taskService.getTask(this.projectId, taskId).subscribe({
-       next: (task : Task) => {
-        this.task = task;
-      },
-      error: (err) => {
-        console.error('Failed to fetch project tasks', err);
-      },
-    });
+    const projectKey = this.route.snapshot.paramMap.get('projectKey')!;
+    if (this.projectCache.hasProjectId(projectKey)) {
+      const projectId = this.projectCache.getProjectId(projectKey);
+      if (projectId) {
+        console.log("teeestt");
+        this.taskService.getTask(projectId, taskId).subscribe(task => {
+          this.task = task;
+        })
+      }
+    }
   }
 
   testCeva(file : File) {

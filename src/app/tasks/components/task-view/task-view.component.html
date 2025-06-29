@@ -125,12 +125,14 @@
         <div class="mt-8">
           <h3 class="font-bold text-gray-800 text-xl mb-3">Add a comment</h3>
           <textarea
+            [(ngModel)] = "comment"
             rows="4"
             placeholder="Write a comment..."
             class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 text-base"
           ></textarea>
           <div class="flex gap-4 mt-3 justify-end">
             <button
+              (click)="saveComment()"
               class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 shadow"
             >
               Save
@@ -162,9 +164,9 @@
           Time details
         </h2>
 
-        <p class="text-gray-700"><strong>Assigned:</strong> Andrei Popescu</p>
-        <p class="text-gray-700"><strong>Created date:</strong> 20 mai 2025</p>
-        <p class="text-gray-700"><strong>Last modified:</strong> 22 mai 2025</p>
+        <p class="text-gray-700"><strong>Assigned:</strong> {{ taskDetails?.taskMetadataDTO?.assignedTo }}</p>
+        <p class="text-gray-700"><strong>Created date:</strong> {{ taskDetails?.taskMetadataDTO?.createdDate | date: 'dd/MM/yyyy HH:mm'}}</p>
+        <p class="text-gray-700"><strong>Last modified:</strong> {{ taskDetails?.taskMetadataDTO?.modifiedDate | date: 'dd/MM/yyyy HH:mm'}}</p>
 
         <h3 class="text-xl font-bold text-gray-800 mt-5 border-b pb-4">
           Urmărire Timp
