@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ProjectService } from '../../../projects/services/project.service';
+import { catchError, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,19 +14,25 @@ export class ProjectCacheService {
     this.projectKeyToIdMap.set(projectKey, projectId);
   }
 
-  getProjectId(projectKey : string) : string | undefined {
-    return this.projectKeyToIdMap.get(projectKey);
+  getProjectId(projectKey : string) : Observable<string | null> {
+    const projectId = this.projectKeyToIdMap.get(projectKey);
+    if (projectId) {
+      return of(projectId);
+    }
+    
+    return this.populateProjectIdIfMissing(projectKey).pipe(
+      tap((result: string) => {
+        this.setProjectId(projectKey, result);
+      }),
+      catchError(() => of(null))
+    );
   }
 
   hasProjectId(projectKey : string) : boolean {
     return this.projectKeyToIdMap.has(projectKey);
   }
 
-  populateProjectIdIfMissing(projectKey : string) : void {
-    this.projectService.getProjectId(projectKey).subscribe({
-      next: (result : string) => {
-        this.setProjectId(projectKey, result);
-      }
-    })
+  private populateProjectIdIfMissing(projectKey : string) : Observable<string> {
+    return this.projectService.getProjectId(projectKey);
   }
 }
