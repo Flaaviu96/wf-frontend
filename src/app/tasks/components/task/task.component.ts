@@ -22,7 +22,6 @@ export class TaskComponent {
   ) {}
 
   ngOnInit() {
-    console.log("before init");
     this.getTask();
   }
 
@@ -35,6 +34,7 @@ export class TaskComponent {
       if (!projectId) return;
       this.taskService.getTask(projectId, taskId).subscribe(task => {
         this.task = task;
+        console.log(this.task);
       })
     })
   }

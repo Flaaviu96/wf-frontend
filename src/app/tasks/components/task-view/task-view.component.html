@@ -1,25 +1,52 @@
-<div class="flex flex-col h-screen items-center p-8 bg-gray-50">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizualizare Task</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Custom CSS to hide scrollbar for a cleaner look */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        /* Optional: Custom font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<!-- Fundalul body-ului este acum mai închis (bg-gray-100) pentru un contrast mai bun -->
+<body class="bg-gray-100 font-sans antialiased flex flex-col h-screen items-center p-8">
+
   <div class="max-w-6xl w-full">
+    <!-- Header with Task Name and Action Buttons -->
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
       <h1 class="text-4xl font-extrabold text-gray-900 mb-4 md:mb-0">
         {{ taskDetails?.taskName }}
       </h1>
       <div class="flex flex-wrap gap-3">
         <button
-          class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 flex items-center"
+          class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center"
+          disabled
         >
           <i class="fas fa-edit mr-2"></i> Edit
         </button>
         <button
-          class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg shadow hover:bg-gray-300 transition duration-300 flex items-center"
+          class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center"
         >
-          <i class="fas fa-user-plus mr-2"></i> Assigne
+          <i class="fas fa-user-plus mr-2"></i> Assign
         </button>
 
         <div class="relative inline-block text-left">
           <select
             (change)="onStateChange($event)"
-            class="block appearance-none w-full bg-blue-600 text-white px-5 py-2 pr-8 rounded-lg shadow hover:bg-blue-700 transition duration-300 flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            class="block appearance-none w-full bg-blue-600 text-white px-5 py-2 pr-8 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             aria-label="Selectează Starea Task-ului"
           >
             <option value="" disabled selected>Change in</option>
@@ -47,8 +74,8 @@
       </div>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-8">
-      <div class="flex-1 bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6">
+    <div class="flex flex-col lg:flex-row gap-8 w-full">
+      <div class="flex-1 bg-white rounded-xl shadow-xl p-8 flex flex-col gap-6 border border-gray-200">
         <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
           Task details
         </h2>
@@ -108,7 +135,7 @@
 
             <label
               for="fileInput"
-              class="cursor-pointer bg-blue-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200"
+              class="cursor-pointer bg-blue-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200 shadow-md"
             >
               Upload File
             </label>
@@ -133,12 +160,12 @@
           <div class="flex gap-4 mt-3 justify-end">
             <button
               (click)="saveComment()"
-              class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 shadow"
+              class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 shadow-md"
             >
               Save
             </button>
             <button
-              class="px-6 py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition duration-300 shadow"
+              class="px-6 py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition duration-300 shadow-md"
             >
               Cancel
             </button>
@@ -146,10 +173,10 @@
         </div>
 
         <div
-          class="bg-gray-50 rounded-lg p-6 shadow-inner max-h-96 overflow-y-auto mt-8 scrollbar-hide"
+          class="bg-gray-50 rounded-lg p-6 shadow-inner max-h-96 overflow-y-auto mt-8 scrollbar-hide border border-gray-200"
         >
           <h3 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
-            Comments
+            Comments ({{ taskDetails?.commentDTOS?.length || 0 }})
           </h3>
           <div *ngFor="let currentComment of taskDetails?.commentDTOS">
             <app-comment [appComment]="currentComment"></app-comment>
@@ -158,7 +185,7 @@
       </div>
 
       <div
-        class="w-full lg:w-80 bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6 flex-shrink-0"
+        class="w-full lg:w-80 bg-white rounded-xl shadow-xl p-8 flex flex-col gap-6 flex-shrink-0 border border-gray-200"
       >
         <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
           Time details
@@ -187,4 +214,5 @@
       </div>
     </div>
   </div>
-</div>
+</body>
+</html>
