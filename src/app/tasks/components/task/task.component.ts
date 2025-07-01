@@ -30,22 +30,13 @@ export class TaskComponent {
     const taskId = this.route.snapshot.paramMap.get('taskId')!;
     const projectKey = this.route.snapshot.paramMap.get('projectKey')!;
     if (!taskId || !projectKey) return;
-    const projectId = this.resolveProjectId(projectKey);
-    console.log("projectid"+projectId);
-    if(projectId) {
-    this.taskService.getTask(projectId, taskId).subscribe(task => {
-      this.task = task;
-    })
-    }
-  }
 
-  private resolveProjectId(projectKey: string): string | null {
-    let projectId = this.projectCache.getProjectId(projectKey);
-    if (!projectId && !this.projectCache.hasProjectId(projectKey)) {
-      this.projectCache.populateProjectIdIfMissing(projectKey);
-      projectId = this.projectCache.getProjectId(projectKey);
-    }
-    return projectId ?? null;
+    this.projectCache.getProjectId(projectKey).subscribe(projectId => {
+      if (!projectId) return;
+      this.taskService.getTask(projectId, taskId).subscribe(task => {
+        this.task = task;
+      })
+    })
   }
 
   testCeva(file : File) {
