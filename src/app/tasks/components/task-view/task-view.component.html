@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vizualizare Task</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        /* Custom CSS to hide scrollbar for a cleaner look */
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
-        /* Optional: Custom font */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vizualizare Task</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    /* Custom CSS to hide scrollbar for a cleaner look */
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+
+    /* Optional: Custom font */
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
 </head>
 <!-- Fundalul body-ului este acum mai închis (bg-gray-100) pentru un contrast mai bun -->
+
 <body class="bg-gray-100 font-sans antialiased flex flex-col h-screen items-center p-8">
 
   <div class="max-w-6xl w-full">
@@ -31,45 +37,26 @@
         {{ taskDetails?.taskName }}
       </h1>
       <div class="flex flex-wrap gap-3">
-        <button
-          class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center"
-          disabled
-        >
+        <button class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center
+                disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400" [disabled]="!hasWritePermission">
           <i class="fas fa-edit mr-2"></i> Edit
         </button>
-        <button
-          class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center"
-        >
+        <button class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center
+                disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400" [disabled]="!hasWritePermission">
           <i class="fas fa-user-plus mr-2"></i> Assign
         </button>
 
         <div class="relative inline-block text-left">
-          <select
-            (change)="onStateChange($event)"
-            class="block appearance-none w-full bg-blue-600 text-white px-5 py-2 pr-8 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            aria-label="Selectează Starea Task-ului"
-          >
+          <select (change)="onStateChange($event)"
+             [disabled]="!hasWritePermission"
+            class="block appearance-none w-full bg-blue-600 text-white px-5 py-2 pr-8 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+            disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
+            aria-label="Selectează Starea Task-ului">
             <option value="" disabled selected>Change in</option>
-            <option
-              *ngFor="let stateOption of possibleStates"
-              [value]="stateOption"
-            >
+            <option *ngFor="let stateOption of possibleStates" [value]="stateOption">
               {{ stateOption }}
             </option>
           </select>
-          <div
-            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white"
-          >
-            <svg
-              class="fill-current h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path
-                d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.043 6.871 4.629 8.285z"
-              />
-            </svg>
-          </div>
         </div>
       </div>
     </div>
@@ -89,130 +76,25 @@
         </p>
         <p class="text-gray-700 text-lg">
           <strong>Status:</strong>
-          <span
-            class="ml-2 px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800"
-          >
+          <span class="ml-2 px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800">
             {{ taskDetails?.state }}
           </span>
         </p>
 
-        <div>
-          <h3 class="font-bold text-gray-800 text-xl mb-3">Attachments</h3>
-          <div
-            class="flex overflow-x-auto space-x-4 p-3 bg-gray-50 rounded-lg border border-gray-200 min-h-[100px] items-center attachments-scroll"
-          >
-            <div
-              class="flex-shrink-0 w-24 h-24 flex items-center justify-center border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition duration-200 overflow-hidden"
-            >
-              <img
-                src="https://via.placeholder.com/64x64?text=Screenshot1.png"
-                alt="Screenshot 1"
-                class="object-cover w-full h-full"
-              />
-            </div>
-            <div
-              class="flex-shrink-0 w-24 h-24 flex items-center justify-center border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition duration-200 overflow-hidden"
-            >
-              <i class="fas fa-file-alt text-gray-500 text-3xl"></i>
-            </div>
-            <div
-              class="flex-shrink-0 w-24 h-24 flex items-center justify-center border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition duration-200 overflow-hidden"
-            >
-              <img
-                src="https://via.placeholder.com/64x64?text=Log_file.txt"
-                alt="Log File"
-                class="object-cover w-full h-full"
-              />
-            </div>
-          </div>
-          <div class="mt-5 flex items-center gap-4">
-            <input
-              type="file"
-              id="fileInput"
-              class="hidden"
-              (change)="onFileSelected($event)"
-            />
+        <!--Attachment section-->
+        <app-task-attachments [hasWritePermission]="hasWritePermission"></app-task-attachments>
 
-            <label
-              for="fileInput"
-              class="cursor-pointer bg-blue-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200 shadow-md"
-            >
-              Upload File
-            </label>
-
-            <span
-              *ngIf="selectedFileName"
-              class="text-sm text-gray-600 truncate max-w-xs"
-            >
-              {{ selectedFileName }}
-            </span>
-          </div>
-        </div>
-
+        <!--Comment section-->
         <div class="mt-8">
-          <h3 class="font-bold text-gray-800 text-xl mb-3">Add a comment</h3>
-          <textarea
-            [(ngModel)] = "comment"
-            rows="4"
-            placeholder="Write a comment..."
-            class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 text-base"
-          ></textarea>
-          <div class="flex gap-4 mt-3 justify-end">
-            <button
-              (click)="saveComment()"
-              class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 shadow-md"
-            >
-              Save
-            </button>
-            <button
-              class="px-6 py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition duration-300 shadow-md"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-
-        <div
-          class="bg-gray-50 rounded-lg p-6 shadow-inner max-h-96 overflow-y-auto mt-8 scrollbar-hide border border-gray-200"
-        >
-          <h3 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
-            Comments ({{ taskDetails?.commentDTOS?.length || 0 }})
-          </h3>
-          <div *ngFor="let currentComment of taskDetails?.commentDTOS">
-            <app-comment [appComment]="currentComment"></app-comment>
-          </div>
+          <app-task-comments-view 
+          [hasWritePermission]="hasWritePermission"
+          [comments]="taskDetails?.commentDTOS ?? null"
+          ></app-task-comments-view>
         </div>
       </div>
-
-      <div
-        class="w-full lg:w-80 bg-white rounded-xl shadow-xl p-8 flex flex-col gap-6 flex-shrink-0 border border-gray-200"
-      >
-        <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
-          Time details
-        </h2>
-
-        <p class="text-gray-700"><strong>Assigned:</strong> {{ taskDetails?.taskMetadataDTO?.assignedTo }}</p>
-        <p class="text-gray-700"><strong>Created date:</strong> {{ taskDetails?.taskMetadataDTO?.createdDate | date: 'dd/MM/yyyy HH:mm'}}</p>
-        <p class="text-gray-700"><strong>Last modified:</strong> {{ taskDetails?.taskMetadataDTO?.modifiedDate | date: 'dd/MM/yyyy HH:mm'}}</p>
-
-        <h3 class="text-xl font-bold text-gray-800 mt-5 border-b pb-4">
-          Urmărire Timp
-        </h3>
-
-        <div class="w-full">
-          <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-            <div
-              class="bg-blue-600 h-2.5 rounded-full"
-              style="width: 60%"
-            ></div>
-          </div>
-
-          <p class="mt-2 text-sm text-gray-700">
-            18 zile trecute / 12 zile rămase
-          </p>
-        </div>
-      </div>
+      <app-task-time-details [taskMetadata]="taskDetails?.taskMetadataDTO ?? null"></app-task-time-details>
     </div>
   </div>
 </body>
+
 </html>

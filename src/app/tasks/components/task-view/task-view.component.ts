@@ -1,21 +1,36 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../../models/task.model';
-import { CommentComponent } from "../comment/comment/comment.component";
 import { FormsModule } from '@angular/forms';
+import { PermissionType } from '../../../models/permission-type.model';
+import { TaskCommentsViewComponent } from '../task-comments-view/task-comments-view.component';
+import { TaskTimeDetailsComponent } from '../task-time-details/task-time-details.component';
+import { TaskAttachmentsComponent } from '../task-attachments/task-attachments.component';
 @Component({
   selector: 'app-task-view',
-  imports: [CommonModule, CommentComponent, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TaskCommentsViewComponent,
+    TaskTimeDetailsComponent,
+    TaskAttachmentsComponent],
   templateUrl: './task-view.component.html',
   styleUrl: './task-view.component.css'
 })
 export class TaskViewComponent {
   possibleStates: string[] = ['To Do', 'In Progress', 'Done', 'Testing', 'Blocked'];
-  @Input() taskDetails : Task | null = null;
+  @Input() taskDetails: Task | null = null;
   @Output() uploadFile = new EventEmitter<File>;
   selectedFileName: string | null = null;
   comment: any;
-  
+  hasWritePermission: boolean = true;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['taskDetails'] && this.taskDetails) {
+      this.hasWritePermission = this.taskDetails.permissionTypes.includes(PermissionType.WRITE);
+    }
+  }
+
   constructor() { }
 
   onStateChange(event: Event): void {
