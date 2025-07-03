@@ -16,4 +16,8 @@ export class ApiService {
   post<T>(url : string, body : any, options : {withCredentials : boolean}) : Observable<T> {
     return this.http.post<T>(url, body, options);
   }
+
+  patch<T>(url: string, body: any, options: { withCredentials: boolean }): Observable<T> {
+  return this.http.patch<T>(url, body, options);
+}
 }

@@ -9,8 +9,4 @@ import { CommonModule } from '@angular/common';
 })
 export class TaskTimeDetailsComponent {
   @Input() taskMetadata : Taskmetadata | null = null;
-
-  ngOnInit() {
-    console.log(this.taskMetadata);
-  }
 }
