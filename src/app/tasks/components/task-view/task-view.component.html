@@ -71,8 +71,9 @@
           <strong>Name:</strong> {{ taskDetails?.taskName }}
         </p>
         <p class="text-gray-700 text-lg leading-relaxed">
-          <strong>Description:</strong>
-          {{ taskDetails?.taskMetadataDTO?.description }}
+          <ng-container *ngIf="taskDetails?.taskMetadataDTO as metadata">
+            <input matInput [(ngModel)]="metadata.description">
+          </ng-container>
         </p>
         <p class="text-gray-700 text-lg">
           <strong>Status:</strong>
@@ -88,11 +89,11 @@
         <div class="mt-8">
           <app-task-comments-view 
           [hasWritePermission]="hasWritePermission"
-          [comments]="taskDetails?.commentDTOS ?? []"
+          [comments]="taskDetails.commentDTOS ?? []"
           ></app-task-comments-view>
         </div>
       </div>
-      <app-task-time-details [taskMetadata]="taskDetails?.taskMetadataDTO ?? null"></app-task-time-details>
+      <app-task-time-details [taskMetadata]="taskDetails.taskMetadataDTO ?? null"></app-task-time-details>
     </div>
   </div>
 </body>

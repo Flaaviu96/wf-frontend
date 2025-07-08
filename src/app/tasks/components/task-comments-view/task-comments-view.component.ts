@@ -36,7 +36,7 @@ export class TaskCommentsViewComponent implements OnDestroy {
       author : "dicas",
       id: 0
     }
-    this.taskContext.dualComment.getIntent().add([comment, false]);
+    this.taskContext.dualComment.getIntent().add([comment, true]);
   }
 
   isCommentEditable(commentId: number): boolean {
@@ -68,7 +68,7 @@ export class TaskCommentsViewComponent implements OnDestroy {
     if (comment) {
       const id = this.comments.findIndex(c => c.id === comment.id);
       if (id === -1) {
-        this.comments.push(comment);
+        this.comments.unshift(comment);
       } else {
         this.comments[id] = comment;
       }

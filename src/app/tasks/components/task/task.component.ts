@@ -6,6 +6,7 @@ import { TaskViewComponent } from "../task-view/task-view.component";
 import { ProjectCacheService } from '../../../shared/services/project-cache/project-cache.service';
 import { TaskContextService } from '../../services/context/task-context.service';
 import { Subject, takeUntil } from 'rxjs';
+import { Comment } from '../../../models/comment.model';
 
 @Component({
   selector: 'app-task',
@@ -14,7 +15,7 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrl: './task.component.css'
 })
 export class TaskComponent implements OnInit, OnDestroy{
-  task : Task | null = null;
+  task!: Task;
   private file : File | null = null;
   private destroy = new Subject<void>();
 
@@ -52,12 +53,23 @@ export class TaskComponent implements OnInit, OnDestroy{
   listenNewOrUpdateComment() {
     this.context.dualComment.getIntent().listener
     .pipe(takeUntil(this.destroy))
-    .subscribe(Comment => {
-      const {projectKey, taskKey} = this.context.getProjectAndTaskKeys();
-      this.taskService.updateComment(projectKey, taskKey, Comment).subscribe(newComment => {
-        this.context.dualComment.getListen().add(newComment);
-      })
+    .subscribe(([Comment, isNew]) => {
+      this.updateOrCreateNewComment([Comment, isNew])
     })
+  }
+
+  updateOrCreateNewComment(commentTuple : [Comment, boolean]) {
+    const [comment, isNew] = commentTuple;
+    const {projectKey, taskKey} = this.context.getProjectAndTaskKeys();
+    if (isNew) {
+      this.taskService.saveComment(projectKey, taskKey, comment).subscribe(newComment => {
+        this.context.dualComment.getListen().add([newComment, true]);
+      })
+    } else {
+      this.taskService.updateComment(projectKey, taskKey, comment).subscribe(updatedComment => {
+        this.context.dualComment.getListen().add([updatedComment, false]);
+      })
+    }
   }
 
   testCeva(file : File) {

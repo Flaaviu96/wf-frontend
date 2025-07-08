@@ -19,10 +19,8 @@ import { TaskAttachmentsComponent } from '../task-attachments/task-attachments.c
 })
 export class TaskViewComponent {
   possibleStates: string[] = ['To Do', 'In Progress', 'Done', 'Testing', 'Blocked'];
-  @Input() taskDetails: Task | null = null;
-  @Output() uploadFile = new EventEmitter<File>;
+  @Input() taskDetails!: Task;
   selectedFileName: string | null = null;
-  comment: any;
   hasWritePermission: boolean = true;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -42,11 +40,7 @@ export class TaskViewComponent {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.selectedFileName = file.name;
-      this.uploadFile.emit(file);
+      // this.uploadFile.emit(file);
     }
-  }
-
-  saveComment() {
-    console.log(this.comment);
   }
 }
