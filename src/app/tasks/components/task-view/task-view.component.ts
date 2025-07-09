@@ -6,6 +6,7 @@ import { PermissionType } from '../../../models/permission-type.model';
 import { TaskCommentsViewComponent } from '../task-comments-view/task-comments-view.component';
 import { TaskTimeDetailsComponent } from '../task-time-details/task-time-details.component';
 import { TaskAttachmentsComponent } from '../task-attachments/task-attachments.component';
+import { EditableFieldComponent } from './editable-field/editable-field.component';
 @Component({
   selector: 'app-task-view',
   imports: [
@@ -13,12 +14,16 @@ import { TaskAttachmentsComponent } from '../task-attachments/task-attachments.c
     FormsModule,
     TaskCommentsViewComponent,
     TaskTimeDetailsComponent,
-    TaskAttachmentsComponent],
+    TaskAttachmentsComponent,
+    EditableFieldComponent
+  ],
   templateUrl: './task-view.component.html',
   styleUrl: './task-view.component.css'
 })
 export class TaskViewComponent {
   possibleStates: string[] = ['To Do', 'In Progress', 'Done', 'Testing', 'Blocked'];
+  editingFields : { [keys : string] : boolean} = {};
+
   @Input() taskDetails!: Task;
   selectedFileName: string | null = null;
   hasWritePermission: boolean = true;
@@ -42,5 +47,19 @@ export class TaskViewComponent {
       this.selectedFileName = file.name;
       // this.uploadFile.emit(file);
     }
+  }
+
+  enableEditing(field : string) : void {
+    this.editingFields[field] = true;
+    console.log("testt");
+  }
+
+  isEditing(field : string) : boolean {
+    console.log(!this.editingFields[field]);
+    return !this.editingFields[field];
+  }
+
+  disableEditing(field : string) : void {
+    this.editingFields[field] = false;
   }
 }
