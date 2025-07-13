@@ -10,5 +10,7 @@ export interface Task {
     commentDTOS ?: AppComment[],
     permissionTypes: PermissionType[];
     taskMetadataDTO ?: Taskmetadata,
-    taskTimeTrackingDTO ?: TaskTimeTracking
+    taskTimeTrackingDTO ?: TaskTimeTracking,
+    createdDate : Date,
+    modifiedDate : Date,
 }

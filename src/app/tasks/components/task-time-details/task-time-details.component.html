@@ -5,9 +5,9 @@
         </h2>
 
         <p class="text-gray-700"><strong>Assigned:</strong> {{ taskMetadata?.assignedTo }}</p>
-        <p class="text-gray-700"><strong>Created date:</strong> {{ taskMetadata?.createdDate | date:
+        <p class="text-gray-700"><strong>Created date:</strong> {{ time?.createdDate | date:
           'dd/MM/yyyy HH:mm'}}</p>
-        <p class="text-gray-700"><strong>Last modified:</strong> {{ taskMetadata?.modifiedDate | date:
+        <p class="text-gray-700"><strong>Last modified:</strong> {{ time?.modifiedDate | date:
           'dd/MM/yyyy HH:mm'}}</p>
 
         <h3 class="text-xl font-bold text-gray-800 mt-5 border-b pb-4">

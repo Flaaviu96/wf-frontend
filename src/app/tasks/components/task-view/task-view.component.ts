@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../../models/task.model';
 import { FormsModule } from '@angular/forms';
@@ -6,7 +6,10 @@ import { PermissionType } from '../../../models/permission-type.model';
 import { TaskCommentsViewComponent } from '../task-comments-view/task-comments-view.component';
 import { TaskTimeDetailsComponent } from '../task-time-details/task-time-details.component';
 import { TaskAttachmentsComponent } from '../task-attachments/task-attachments.component';
-import { EditableFieldComponent } from './editable-field/editable-field.component';
+import { TaskContextService } from '../../services/context/task-context.service';
+import { Subject, takeUntil } from 'rxjs';
+import { TaskPatch } from '../../../models/taskpatch.model';
+import { State } from '../../../models/state';
 @Component({
   selector: 'app-task-view',
   imports: [
@@ -15,15 +18,15 @@ import { EditableFieldComponent } from './editable-field/editable-field.componen
     TaskCommentsViewComponent,
     TaskTimeDetailsComponent,
     TaskAttachmentsComponent,
-    EditableFieldComponent
   ],
   templateUrl: './task-view.component.html',
   styleUrl: './task-view.component.css'
 })
 export class TaskViewComponent {
-  possibleStates: string[] = ['To Do', 'In Progress', 'Done', 'Testing', 'Blocked'];
+  @Input() possibleStates: State[]= [];
   editingFields : { [keys : string] : boolean} = {};
-
+  tempFields : { [keys : string] : string} = {};
+  private destroy = new Subject<void>();
   @Input() taskDetails!: Task;
   selectedFileName: string | null = null;
   hasWritePermission: boolean = true;
@@ -34,7 +37,28 @@ export class TaskViewComponent {
     }
   }
 
-  constructor() { }
+  ngOnDestroy() {
+    this.destroy.next();
+    this.destroy.complete();
+  }
+
+  ngOnInit() {
+    this.listenChanges();
+    console.log(this.possibleStates);
+  }
+
+  listenChanges() {
+    this.taskContext.dualChanges.getListen().listener
+    .pipe(takeUntil(this.destroy))
+    .subscribe(([taskPatch]) => {
+      this.taskDetails = {
+        ...this.taskDetails,
+        ...taskPatch
+      } as Task
+    })
+  }
+
+  constructor(private taskContext : TaskContextService) { }
 
   onStateChange(event: Event): void {
     const selectedState = (event.target as HTMLSelectElement).value;
@@ -51,15 +75,47 @@ export class TaskViewComponent {
 
   enableEditing(field : string) : void {
     this.editingFields[field] = true;
-    console.log("testt");
+    switch(field) {
+      case "description":
+        this.tempFields[field] = this.taskDetails.taskMetadataDTO!.description;
+        break;
+      case "taskName":
+        this.tempFields[field] = this.taskDetails.taskName;
+        break;
+    }
   }
 
   isEditing(field : string) : boolean {
-    console.log(!this.editingFields[field]);
-    return !this.editingFields[field];
+    return this.editingFields[field];
   }
 
   disableEditing(field : string) : void {
     this.editingFields[field] = false;
+    switch(field) {
+      case "description":
+        this.taskDetails.taskMetadataDTO!.description = this.tempFields[field];
+        break;
+      case "taskName":
+        this.taskDetails.taskName = this.tempFields[field];
+        break;
+    }
+  }
+
+  saveChange(value : string, fieldName : string) {
+    this.disableEditing(fieldName);
+    const patch: TaskPatch = {};
+    switch(fieldName) {
+      case "description":
+        patch.taskMetadataDTO = patch.taskMetadataDTO ?? {};
+        patch.taskMetadataDTO.description = value;
+        break;
+      case "state":
+        patch.state = value;
+        break;
+      case "taskName":
+        patch.taskName = value;
+        break;
+    }
+    this.taskContext.dualChanges.getIntent().add([patch]);
   }
 }

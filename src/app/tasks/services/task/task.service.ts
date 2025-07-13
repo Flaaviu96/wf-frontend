@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { enviroment } from '../../../enviroment';
 import { Task } from '../../../models/task.model';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Comment } from '../../../models/comment.model';
+import { TaskPatch } from '../../../models/taskpatch.model';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,11 @@ export class TaskService {
   saveComment(projectId : string, taskId : string, comment : Comment) : Observable<Comment> {
     const url = enviroment.apiCommentUrl(projectId, taskId);
     return this.apiService.post<Comment>(url, comment, {withCredentials: true});
+  }
+
+  updateTaskMetadata(projectId : string, taskId : string, patch : TaskPatch) : Observable<TaskPatch> {
+    const url = enviroment.apiTaskMetadataUrl(projectId, taskId);
+    return this.apiService.patch<TaskPatch>(url, patch, {withCredentials: true});
   }
 
 }

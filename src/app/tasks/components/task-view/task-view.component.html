@@ -1,95 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vizualizare Task</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <style>
+      /* Custom CSS to hide scrollbar for a cleaner look */
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vizualizare Task</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <style>
-    /* Custom CSS to hide scrollbar for a cleaner look */
-    .scrollbar-hide::-webkit-scrollbar {
-      display: none;
-    }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
+      }
 
-    .scrollbar-hide {
-      -ms-overflow-style: none;
-      /* IE and Edge */
-      scrollbar-width: none;
-      /* Firefox */
-    }
+      /* Optional: Custom font */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
 
-    /* Optional: Custom font */
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
-</head>
+  <body
+    class="bg-gray-100 font-sans antialiased flex flex-col h-screen items-center p-8"
+  >
+    <div class="max-w-6xl w-full">
+      <div
+        class="flex flex-col md:flex-row md:items-center justify-between mb-8"
+      >
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-4 md:mb-0">
+          {{ taskDetails.taskName }}
+        </h1>
+        <div class="flex flex-wrap gap-3">
+          <button
+            class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
+            [disabled]="!hasWritePermission"
+          >
+            <i class="fas fa-user-plus mr-2"></i> Assign
+          </button>
 
-<body class="bg-gray-100 font-sans antialiased flex flex-col h-screen items-center p-8">
-
-  <div class="max-w-6xl w-full">
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
-      <h1 class="text-4xl font-extrabold text-gray-900 mb-4 md:mb-0">
-        {{ taskDetails.taskName }}
-      </h1>
-      <div class="flex flex-wrap gap-3">
-        <button class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center
-                disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400" [disabled]="!hasWritePermission">
-          <i class="fas fa-edit mr-2"></i> Edit
-        </button>
-        <button class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center
-                disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400" [disabled]="!hasWritePermission">
-          <i class="fas fa-user-plus mr-2"></i> Assign
-        </button>
-
-        <div class="relative inline-block text-left">
-          <select (change)="onStateChange($event)"
-             [disabled]="!hasWritePermission"
-            class="block appearance-none w-full bg-blue-600 text-white px-5 py-2 pr-8 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-            disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
-            aria-label="Selectează Starea Task-ului">
-            <option value="" disabled selected>Change in</option>
-            <option *ngFor="let stateOption of possibleStates" [value]="stateOption">
-              {{ stateOption }}
-            </option>
-          </select>
+          <div class="relative inline-block text-left">
+            <select
+              (change)="onStateChange($event)"
+              [disabled]="!hasWritePermission"
+              class="block appearance-none w-full bg-blue-600 text-white px-5 py-2 pr-8 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
+              aria-label="Selectează Starea Task-ului"
+            >
+              <option value="" disabled selected>Change in</option>
+              <option
+                *ngFor="let stateOption of possibleStates"
+                [value]="stateOption"
+              >
+                {{ stateOption }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="flex flex-col lg:flex-row gap-8 w-full">
-      <div class="flex-1 bg-white rounded-xl shadow-xl p-8 flex flex-col gap-6 border border-gray-200">
-        <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
-          Task details
-        </h2>
+      <div class="flex flex-col lg:flex-row gap-8 w-full">
+        <div
+          class="flex-1 bg-white rounded-xl shadow-xl p-8 flex flex-col gap-6 border border-gray-200"
+        >
+          <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
+            Task details
+          </h2>
+          <div class="flex items-start space-x-4">
+            <p class="text-gray-700 text-lg">
+              <strong>Name:</strong>
+            </p>
+            <input
+              class="rounded-lg resize-none"
+              matInput
+              [disabled]="!isEditing('taskName')"
+              [(ngModel)]="taskDetails.taskName"
+            />
+            <div class="flex w-full space-x-4 justify-end">
+              <button
+                *ngIf="!isEditing('taskName') && hasWritePermission"
+                (click)="enableEditing('taskName')"
+                class="text-blue-600 hover:text-blue-800 transition duration-300"
+              >
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <button
+                *ngIf="isEditing('taskName')"
+                (click)="saveChange(taskDetails.taskName,'taskName')"
+                class="bg-blue-600 text-white px-3 py-1 rounded-md shadow-sm hover:bg-blue-700 transition duration-300 text-sm"
+              >
+                Save
+              </button>
+              <button
+                *ngIf="isEditing('taskName')"
+                (click)="disableEditing('taskName')"
+                class="bg-gray-200 text-gray-800 px-3 py-1 rounded-md shadow-sm hover:bg-gray-300 transition duration-300 text-sm"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+          <p class="text-gray-700 text-lg">
+            <strong>Status:</strong>
+            <span
+              class="ml-2 px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800"
+            >
+              {{ taskDetails.state }}
+            </span>
+          </p>
 
-        <p class="text-gray-700 text-lg">
-          <strong>Name:</strong> {{ taskDetails.taskName }}
-        </p>
-        <ng-container *ngIf="taskDetails?.taskMetadataDTO as metadata">
-        <app-editable-field label="Description" [value]="metadata.description"></app-editable-field>
-        </ng-container>
-        <p class="text-gray-700 text-lg">
-          <strong>Status:</strong>
-          <span class="ml-2 px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800">
-            {{ taskDetails.state }}
-          </span>
-        </p>
+          <!-------------------DESCRIPTION------------------------------>
+          <div
+            *ngIf="taskDetails?.taskMetadataDTO as metaData"
+            class="flex flex-col items-start space-x-4"
+          >
+            <p class="text-gray-700 text-lg leading-relaxed">
+              <strong>Description: </strong>
+            </p>
+            <div class="flex flex-col w-full">
+              <textarea
+                class="rounded-lg w-full h-[100px] border border-gray-400 px-3 py-2 resize-none"
+                matInput
+                [(ngModel)]="metaData.description"
+                [disabled]="!isEditing('description')"
+              ></textarea>
+            </div>
+            <div class="flex w-full space-x-4 justify-end">
+              <button
+                *ngIf="!isEditing('description') && hasWritePermission"
+                (click)="enableEditing('description')"
+                class="text-blue-600 hover:text-blue-800 transition duration-300"
+              >
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <button
+                *ngIf="isEditing('description')"
+                (click)="saveChange(metaData.description,`description`)"
+                class="bg-blue-600 text-white px-3 py-1 rounded-md shadow-sm hover:bg-blue-700 transition duration-300 text-sm"
+              >
+                Save
+              </button>
+              <button
+                *ngIf="isEditing('description')"
+                (click)="disableEditing('description')"
+                class="bg-gray-200 text-gray-800 px-3 py-1 rounded-md shadow-sm hover:bg-gray-300 transition duration-300 text-sm"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+          <app-task-attachments
+            [hasWritePermission]="hasWritePermission"
+          ></app-task-attachments>
 
-        <app-task-attachments [hasWritePermission]="hasWritePermission"></app-task-attachments>
-
-        <div class="mt-8">
-          <app-task-comments-view 
-          [hasWritePermission]="hasWritePermission"
-          [comments]="taskDetails.commentDTOS ?? []"
-          ></app-task-comments-view>
+          <div class="mt-8">
+            <app-task-comments-view
+              [hasWritePermission]="hasWritePermission"
+              [comments]="taskDetails.commentDTOS ?? []"
+            ></app-task-comments-view>
+          </div>
         </div>
+        <app-task-time-details
+          [time]="{createdDate: taskDetails.createdDate, modifiedDate: taskDetails.modifiedDate}"
+          [taskMetadata]="taskDetails.taskMetadataDTO ?? null"
+        ></app-task-time-details>
       </div>
-      <app-task-time-details [taskMetadata]="taskDetails.taskMetadataDTO ?? null"></app-task-time-details>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

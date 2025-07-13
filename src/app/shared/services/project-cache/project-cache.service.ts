@@ -14,7 +14,7 @@ export class ProjectCacheService {
     this.projectKeyToIdMap.set(projectKey, projectId);
   }
 
-  getProjectId(projectKey : string) : Observable<string | null> {
+  getProjectId(projectKey : string) : Observable<string> {
     const projectId = this.projectKeyToIdMap.get(projectKey);
     if (projectId) {
       return of(projectId);
@@ -24,7 +24,7 @@ export class ProjectCacheService {
       tap((result: string) => {
         this.setProjectId(projectKey, result);
       }),
-      catchError(() => of(null))
+      catchError(() => of(''))
     );
   }
 

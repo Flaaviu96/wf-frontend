@@ -19,6 +19,8 @@ export class AppComponent {
   ngOnInit() {
     this.authService.loginStatus.subscribe((status : boolean) => {
       this.isLoggedIn = status;
+      console.log(status);
     })
+    console.log("yeess");
   }
 }

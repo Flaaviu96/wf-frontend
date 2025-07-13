@@ -1,6 +1,4 @@
 export interface Taskmetadata {
-    description : string;
-    createdDate : Date,
-    modifiedDate : Date,
+    description : string,
     assignedTo : string
 }
