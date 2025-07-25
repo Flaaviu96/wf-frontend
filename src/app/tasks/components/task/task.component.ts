@@ -10,6 +10,7 @@ import { Comment } from '../../../models/comment.model';
 import { TaskPatch } from '../../../models/taskpatch.model';
 import { WorkflowService } from '../../../shared/services/workflow/workflow.service';
 import { State } from '../../../models/state';
+import { Attachment } from '../../../models/attachment.model';
 
 @Component({
   selector: 'app-task',
@@ -39,11 +40,12 @@ export class TaskComponent implements OnInit, OnDestroy{
     this.getTask();
     this.listenNewOrUpdateComment();
     this.listenTaskMetadataChanges();
+    this.listenAttachments();
   }
 
   getTask() {
-    const taskId = this.route.snapshot.paramMap.get('taskId')!;
-    const projectKey = this.route.snapshot.paramMap.get('projectKey')!;
+    const combinedId = this.route.snapshot.paramMap.get('combinedId')!;
+    const [projectKey, taskId] = combinedId.split('-');
     if (!taskId || !projectKey) return;
     this.projectCache.getProjectId(projectKey).pipe(
       filter(projectId => !!projectId),
@@ -76,10 +78,28 @@ export class TaskComponent implements OnInit, OnDestroy{
   listenTaskMetadataChanges() {
     this.context.dualChanges.getIntent().listener
     .pipe(takeUntil(this.destroy))
-    .subscribe(([taskMetadata]) => {
-      this.updateTaskMetadata(taskMetadata);
+    .subscribe(([taskMetadata, option]) => {
+      this.updateTaskMetadata(taskMetadata, option);
     })
   }
+
+  listenAttachments() {
+    this.context.dualAttachment.getIntent().listener
+    .pipe(takeUntil(this.destroy))
+    .subscribe(([attachment, file, options]) => {
+      if (options === "delete") {
+        this.deleteAttachment(attachment);
+        return;
+      }
+      if (options === "download") {
+        this.downloadAttachment(attachment.id!);
+        return;
+      }
+      this.uploadNewAttachment(file);
+    })
+  }
+
+
 
   private updateOrCreateNewComment(commentTuple : [Comment, boolean]) {
     const [comment, isNew] = commentTuple;
@@ -95,13 +115,57 @@ export class TaskComponent implements OnInit, OnDestroy{
     }
   }
 
-  private updateTaskMetadata(patch : TaskPatch) {
+  private updateTaskMetadata(patch : TaskPatch, option : string) {
     const {projectKey, taskKey} = this.context.getProjectAndTaskKeys();
     this.taskService.updateTaskMetadata(projectKey, taskKey, patch).subscribe((patch : TaskPatch) => {
-      this.context.dualChanges.getListen().add([patch]);
+      console.log(patch);
+      this.context.dualChanges.getListen().add([patch, option]);
     })
   }
 
-  testCeva(file : File) {
+  private deleteAttachment(attachment : Attachment) {
+    const {projectKey, taskKey} = this.context.getProjectAndTaskKeys();
+    this.taskService.deleteAttachment(projectKey, taskKey, attachment.fileName).subscribe({
+      next: () => console.log('Delete successful'),
+      error: (err) => {
+        console.log('Backend error occured: ', err);
+      }
+    })
   }
+
+  private uploadNewAttachment(file : File) {
+    const {projectKey, taskKey} = this.context.getProjectAndTaskKeys();
+    this.taskService.uploadAttachmentStream(projectKey, taskKey, file).subscribe(attachment => {
+      const emptyFile = new File([new Blob()], "empty.txt");
+      this.context.dualAttachment.getListen().add([attachment, emptyFile, "add"]);
+    });
+  }
+
+  private downloadAttachment(attachmentId : number) {
+    const {projectKey, taskKey} = this.context.getProjectAndTaskKeys();
+    this.taskService.downloadAttachment(projectKey, taskKey, attachmentId).subscribe(response => {
+    const blob = response.body!;
+    const contentDisposition = response.headers.get('Content-Disposition');
+    const filename = this.extractFilenameFromContentDisposition(contentDisposition);
+    this.downloadBlob(blob, filename);
+    })
+  }
+
+  private downloadBlob(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+  URL.revokeObjectURL(url);
+}
+
+   extractFilenameFromContentDisposition(header: string | null) : string {
+    if (!header) return 'downloaded-file';
+    const match = header.match(/filename="?([^"]+)"?/);
+    return match && match[1] ? match[1] : 'downloaded-file';
+   }
 }

@@ -22,6 +22,6 @@ export class ProjectViewComponent {
   }
 
   taskClicked(taskId: number) {
-    this.route.navigate(['tasks', this.projectKey, 'viewTask', taskId]);
+    this.route.navigate(['tasks', this.projectKey, 'viewTask', this.projectKey+"-"+taskId]);
   }
 }

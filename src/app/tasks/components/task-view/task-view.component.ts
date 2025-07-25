@@ -44,13 +44,13 @@ export class TaskViewComponent {
 
   ngOnInit() {
     this.listenChanges();
-    console.log(this.possibleStates);
   }
 
   listenChanges() {
     this.taskContext.dualChanges.getListen().listener
     .pipe(takeUntil(this.destroy))
-    .subscribe(([taskPatch]) => {
+    .subscribe(([taskPatch, option]) => {
+      if (option !== "task-view") return;
       this.taskDetails = {
         ...this.taskDetails,
         ...taskPatch
@@ -62,15 +62,12 @@ export class TaskViewComponent {
 
   onStateChange(event: Event): void {
     const selectedState = (event.target as HTMLSelectElement).value;
-  }
-
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.selectedFileName = file.name;
-      // this.uploadFile.emit(file);
+    const state  = this.possibleStates.find(state => state.name === selectedState)?.name;
+    const patch : TaskPatch = {
+      fromState : this.taskDetails.state,
+      toState : state
     }
+    this.taskContext.dualChanges.getIntent().add([patch, "task-view"]);
   }
 
   enableEditing(field : string) : void {
@@ -109,13 +106,10 @@ export class TaskViewComponent {
         patch.taskMetadataDTO = patch.taskMetadataDTO ?? {};
         patch.taskMetadataDTO.description = value;
         break;
-      case "state":
-        patch.state = value;
-        break;
       case "taskName":
         patch.taskName = value;
         break;
     }
-    this.taskContext.dualChanges.getIntent().add([patch]);
+    this.taskContext.dualChanges.getIntent().add([patch, "task-view"]);
   }
 }

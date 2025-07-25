@@ -7,5 +7,6 @@ export const enviroment = {
     apiProjectPermissionUrl: 'http://localhost:8080/permissions',
     apiUserSearchUrl: 'http://localhost:8080/users',
     apiWorkflowUrl: (projectId: number | string) => `http://localhost:8080/workflows/${projectId}`,
-    apiAttachmentUrl: (projectId: number | string, taskId: number | string) => `http://localhost:8080/projects/${projectId}/tasks/${taskId}/attachments`
+    apiAttachmentsUrl: (projectId: number | string, taskId: number | string) => `http://localhost:8080/projects/${projectId}/tasks/${taskId}/attachments`,
+    apiAttachmentUrl: (projectId: number | string, taskId: number | string, attachmentId : number | string) => `http://localhost:8080/projects/${projectId}/tasks/${taskId}/attachments/${attachmentId}`
 }

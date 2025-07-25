@@ -2,7 +2,7 @@
 <textarea [(ngModel)]="comment" rows="4" placeholder="Write a comment..." class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 text-base
                                 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
     [disabled]="!hasWritePermission"></textarea>
-<div class="flex gap-4 mt-3 justify-end">
+<div *ngIf="comment.length > 0" class="flex gap-4 mt-3 justify-end">
     <button (click)="saveComment()"
         class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 shadow-md
                     disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"

@@ -18,7 +18,6 @@ export class UserSearchSelectComponent {
   users : User[] = [];
   @Output() selectedUser = new EventEmitter<string>();
 
-
   constructor(private userService : UserSearchAutocompleteService) {}
 
   ngOnInit() {

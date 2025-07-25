@@ -10,19 +10,14 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
     <style>
-      /* Custom CSS to hide scrollbar for a cleaner look */
       .scrollbar-hide::-webkit-scrollbar {
         display: none;
       }
 
       .scrollbar-hide {
         -ms-overflow-style: none;
-        /* IE and Edge */
         scrollbar-width: none;
-        /* Firefox */
       }
-
-      /* Optional: Custom font */
       body {
         font-family: "Inter", sans-serif;
       }
@@ -40,13 +35,6 @@
           {{ taskDetails.taskName }}
         </h1>
         <div class="flex flex-wrap gap-3">
-          <button
-            class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
-            [disabled]="!hasWritePermission"
-          >
-            <i class="fas fa-user-plus mr-2"></i> Assign
-          </button>
-
           <div class="relative inline-block text-left">
             <select
               (change)="onStateChange($event)"
@@ -57,9 +45,9 @@
               <option value="" disabled selected>Change in</option>
               <option
                 *ngFor="let stateOption of possibleStates"
-                [value]="stateOption"
+                [value]="stateOption.name"
               >
-                {{ stateOption }}
+                {{ stateOption.name }}
               </option>
             </select>
           </div>
@@ -78,9 +66,10 @@
               <strong>Name:</strong>
             </p>
             <input
-              class="rounded-lg resize-none"
+               class="rounded-lg resize-none border-2 transition duration-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
               matInput
               [disabled]="!isEditing('taskName')"
+              [ngClass]="{'border-2 border-blue-500 bg-blue-100': isEditing('taskName')}"
               [(ngModel)]="taskDetails.taskName"
             />
             <div class="flex w-full space-x-4 justify-end">
@@ -158,6 +147,7 @@
           </div>
           <app-task-attachments
             [hasWritePermission]="hasWritePermission"
+            [attachments]="taskDetails.attachmentDTOS ?? []"
           ></app-task-attachments>
 
           <div class="mt-8">

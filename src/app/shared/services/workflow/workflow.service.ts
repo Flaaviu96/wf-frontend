@@ -22,7 +22,8 @@ export class WorkflowService {
   return this.apiService.get<WorkflowDTO>(url, { withCredentials: true }).pipe(
     map((workflow: WorkflowDTO) => {
       this.workflowMaps[workflow.projectId] = workflow.stateDTOListMap;
-      return workflow.stateDTOListMap[fromState];
+      const key = Object.keys(this.workflowMaps['1']).find(state => state.includes(fromState));
+      return key ? this.workflowMaps[projectId][key] : [];
     })
   );
 }

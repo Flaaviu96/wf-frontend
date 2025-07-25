@@ -3,6 +3,7 @@ import { Comment } from '../../../models/comment.model';
 import { DualStream } from '../dual-stream';
 import { Taskmetadata } from '../../../models/task.metadata.model';
 import { TaskPatch } from '../../../models/taskpatch.model';
+import { Attachment } from '../../../models/attachment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class TaskContextService {
   private currentProjectKey : string = '';
   private currentTaskKey : string = '';
   dualComment = new DualStream<[Comment, boolean]>();
-  dualChanges = new DualStream<[TaskPatch]>();
+  dualChanges = new DualStream<[TaskPatch, string]>();
+  dualAttachment = new DualStream<[Attachment, File, string]>();
 
   constructor() { }
 

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { enviroment } from '../../../enviroment';
 import { Task } from '../../../models/task.model';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { Comment } from '../../../models/comment.model';
 import { TaskPatch } from '../../../models/taskpatch.model';
+import { Attachment } from '../../../models/attachment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,4 +33,20 @@ export class TaskService {
     return this.apiService.patch<TaskPatch>(url, patch, {withCredentials: true});
   }
 
+  uploadAttachmentStream(projectId: string, taskId: string, file: File): Observable<Attachment> {
+    const url = enviroment.apiAttachmentsUrl(projectId, taskId);
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.apiService.post<Attachment>(url, formData, {withCredentials: true});
+  }
+
+  deleteAttachment(projectId: string, taskId: string, attachmentId: string): Observable<any> {
+    const url = enviroment.apiAttachmentUrl(projectId, taskId, attachmentId);
+    return this.apiService.delete(url, {withCredentials: true});
+  }
+
+  downloadAttachment(projectId: string, taskId: string, attachmentId: number): Observable<any> {
+    const url = enviroment.apiAttachmentUrl(projectId, taskId, attachmentId);
+    return this.apiService.get(url, {withCredentials: true, responseType: 'blob', observe: 'response'});
+  }
 }
