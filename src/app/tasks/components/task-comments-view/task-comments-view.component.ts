@@ -36,6 +36,7 @@ export class TaskCommentsViewComponent implements OnDestroy {
       author : "dicas",
       id: 0
     }
+    this.comment = '';
     this.taskContext.dualComment.getIntent().add([comment, true]);
   }
 

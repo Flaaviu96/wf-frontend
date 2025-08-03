@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -22,6 +22,11 @@ export class ApiService {
     url: string,
     options?: { withCredentials?: boolean; params?: { [key: string]: string } }
   ): Observable<T>;
+
+  get<T>(
+    url: string,
+    options? :{withCredentials?: boolean; params?: HttpParams}
+  ): Observable<T>
 
   get<T>(url: string, options: any = {}): Observable<any> {
     return this.http.get(url, options);

@@ -10,4 +10,8 @@ export class EventStream<T> {
   add(item: T) {
     this.subject.next(item);
   }
+
+  complete() {
+    this.subject.complete();
+  }
 }

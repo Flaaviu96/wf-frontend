@@ -26,7 +26,6 @@ export class TaskTimeDetailsComponent {
   }
 
   ngOnInit() {
-    console.log("Task-time init");
     this.taskContext.dualChanges.getListen().listener
     .pipe(takeUntil(this.destroy))
     .subscribe(([taskPatch, option])=> {

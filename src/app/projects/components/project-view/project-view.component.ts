@@ -2,10 +2,10 @@ import { Component, Input } from '@angular/core';
 import { Task } from '../../../models/task.model';
 import { PanelBoardComponent } from '../../../shared/components/panel-board/panel-board.component';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-project-view',
-  imports: [PanelBoardComponent, CommonModule],
+  imports: [PanelBoardComponent, CommonModule, RouterModule],
   templateUrl: './project-view.component.html',
   styleUrl: './project-view.component.css',
 })

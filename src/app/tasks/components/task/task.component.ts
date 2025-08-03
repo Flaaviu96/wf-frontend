@@ -125,7 +125,7 @@ export class TaskComponent implements OnInit, OnDestroy{
 
   private deleteAttachment(attachment : Attachment) {
     const {projectKey, taskKey} = this.context.getProjectAndTaskKeys();
-    this.taskService.deleteAttachment(projectKey, taskKey, attachment.fileName).subscribe({
+    this.taskService.deleteAttachment(projectKey, taskKey, attachment.id).subscribe({
       next: () => console.log('Delete successful'),
       error: (err) => {
         console.log('Backend error occured: ', err);

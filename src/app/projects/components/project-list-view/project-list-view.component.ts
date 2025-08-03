@@ -21,7 +21,7 @@ export class ProjectListViewComponent {
       width: '600px'
     });
     dialogRef.afterClosed().subscribe((newProject : Project) => {
-      if(newProject) {
+      if (newProject) {
         this.projects.push(newProject)
       }
     })

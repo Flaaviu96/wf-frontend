@@ -1,4 +1,4 @@
 export interface Attachment {
-    id ?: number,
+    id : number,
     fileName : string
 }
