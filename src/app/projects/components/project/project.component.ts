@@ -26,14 +26,12 @@ export class ProjectComponent {
   ngOnInit() {
      this.projectKey = this.route.snapshot.paramMap.get('projectKey')!;
     if (this.projectKey) {
-      this.projectService.getProjectId(this.projectKey).subscribe(projectId => {
-        this.getProjectWithTasks(projectId);
-      })
+      this.getProjectWithTasks(this.projectKey)
     }
   }
 
-  getProjectWithTasks(projectId: string): void {
-    this.projectService.getTasksGroupedByState(projectId).subscribe({
+  getProjectWithTasks(projectKey: string): void {
+    this.projectService.getTasksGroupedByState(projectKey).subscribe({
       next: (reponse) => {
         this.tasksGroupedByState = reponse.tasksGroupedByState;
       },

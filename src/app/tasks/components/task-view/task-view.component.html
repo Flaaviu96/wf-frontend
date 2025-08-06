@@ -31,7 +31,7 @@
   <body
     class="bg-gray-50 font-sans antialiased flex flex-col items-center p-8 min-h-screen"
   >
-    <div class="max-w-7xl w-full">
+    <div *ngIf="taskForm" [formGroup]="taskForm" class="max-w-7xl w-full max-h-[80vh] overflow-y-auto">
       <div
         class="flex flex-col md:flex-row md:items-center justify-between mb-8"
       >
@@ -72,13 +72,13 @@
             <p class="text-gray-700 text-lg font-semibold min-w-[80px]">Name:</p>
             <div class="flex flex-grow items-center gap-4 mt-2 sm:mt-0">
               <input
+                id="taskName"
+                formControlName="taskName"
                 class="flex-grow rounded-lg border border-gray-300 px-4 py-2 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                        disabled:bg-gray-50 disabled:border-transparent disabled:text-gray-700 disabled:cursor-default"
-                [disabled]="!isEditing('taskName')"
                 [ngClass]="{
                   'ring-2 ring-blue-500 ring-offset-2': isEditing('taskName')
                 }"
-                [(ngModel)]="taskDetails.taskName"
               />
               <div class="flex space-x-3">
                 <button
@@ -124,14 +124,14 @@
 
           <div class="border-t border-gray-200 my-4"></div>
 
-          <div *ngIf="taskDetails?.taskMetadataDTO as metaData" class="flex flex-col">
+          <div *ngIf="taskMetadataFormGroup" [formGroup]="taskMetadataFormGroup" class="flex flex-col">
             <p class="text-gray-700 text-lg font-semibold mb-2">Description:</p>
             <div class="flex flex-col w-full">
               <textarea
+                id="description"
+                formControlName="description"
                 class="rounded-lg w-full h-32 border border-gray-300 px-4 py-3 text-gray-800 resize-y transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                          disabled:bg-gray-50 disabled:border-transparent disabled:text-gray-700 disabled:cursor-default"
-                [(ngModel)]="metaData.description"
-                [disabled]="!isEditing('description')"
                 [ngClass]="{
                   'ring-2 ring-blue-500 ring-offset-2': isEditing('description')
                 }"
@@ -148,7 +148,6 @@
               </button>
               <button
                 *ngIf="isEditing('description')"
-                (click)="saveChange(metaData.description, `description`)"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700 transition duration-300 text-sm font-medium"
               >
                 Save

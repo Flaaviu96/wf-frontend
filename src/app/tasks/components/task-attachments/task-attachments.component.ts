@@ -17,6 +17,7 @@ export class TaskAttachmentsComponent implements OnDestroy {
   constructor(private taskContext : TaskContextService) {}
 
   ngOnInit() {
+    console.log("aaaaaaaaaaaaaa");
     this.taskContext.dualAttachment.getListen().listener.pipe(
       takeUntil(this.destroy)
     ).subscribe( ([attachment, file]) => {

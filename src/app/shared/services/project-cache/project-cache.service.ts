@@ -6,25 +6,27 @@ import { catchError, Observable, of, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class ProjectCacheService {
-  private projectKeyToIdMap = new Map<string, string>();
+  private projectKeyToIdMap = new Map<string, number>();
 
   constructor(private projectService : ProjectService) { }
 
-  setProjectId(projectKey : string, projectId : string) : void {
+  setProjectId(projectKey : string, projectId : number) : void {
     this.projectKeyToIdMap.set(projectKey, projectId);
   }
 
-  getProjectId(projectKey : string) : Observable<string> {
+  getProjectId(projectKey : string) : Observable<number> {
     const projectId = this.projectKeyToIdMap.get(projectKey);
     if (projectId) {
       return of(projectId);
     }
     
     return this.populateProjectIdIfMissing(projectKey).pipe(
-      tap((result: string) => {
-        this.setProjectId(projectKey, result);
+      tap((result: number) => {
+        if (result) {
+          this.setProjectId(projectKey, result);
+        }
       }),
-      catchError(() => of(''))
+      catchError(() => of(0))
     );
   }
 
@@ -32,7 +34,7 @@ export class ProjectCacheService {
     return this.projectKeyToIdMap.has(projectKey);
   }
 
-  private populateProjectIdIfMissing(projectKey : string) : Observable<string> {
+  private populateProjectIdIfMissing(projectKey : string) : Observable<number> {
     return this.projectService.getProjectId(projectKey);
   }
 }

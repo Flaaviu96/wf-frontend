@@ -16,14 +16,12 @@ import { PageResultDTO } from '../../../models/pageResultDTO.model';
 })
 export class TaskListComponent {
   state: string[] = [];
-  projectId : number = 0;
   pageResult : PageResultDTO<TaskSummaryDTO> | null = null;
-
+  projectKey = '';
   constructor(
     private workflowService : WorkflowService,
     private route: ActivatedRoute,
-    private taskListService : TaksListService,
-    private projectCacheService : ProjectCacheService
+    private taskListService : TaksListService
   ) {}
 
   ngOnInit() {
@@ -32,27 +30,16 @@ export class TaskListComponent {
 
 
   fetchWorkflow() {
-    const projectKey = this.route.snapshot.paramMap.get('projectKey')!;
-    this.projectCacheService.getProjectId(projectKey).pipe(
-      filter(projectId => !!projectId),
-      tap(projectId => this.projectId=Number(projectId)),
-      switchMap(projectId =>
-        this.workflowService.getAllTheFromStates(Number(projectId)).pipe(
-          tap(state => {
-            this.state = state;
-          })
-        )
-      )
-    ).subscribe();
+    this.projectKey = this.route.snapshot.paramMap.get('projectKey')!;
+    this.workflowService.getAllTheFromStates(this.projectKey).subscribe(state =>
+      this.state = state
+    )
   }
 
   filterTasks(taskFilter : TaskFilter) {
-    if (this.projectId === 0) return;
-    console.log(taskFilter);
-    this.taskListService.filterTasks(this.projectId, taskFilter).subscribe(page =>{
+    this.taskListService.filterTasks(this.projectKey, taskFilter).subscribe(page =>{
       this.pageResult = page
     }
      );
   }
-
 }

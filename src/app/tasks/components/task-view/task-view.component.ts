@@ -1,7 +1,7 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../../models/task.model';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PermissionType } from '../../../models/permission-type.model';
 import { TaskCommentsViewComponent } from '../task-comments-view/task-comments-view.component';
 import { TaskTimeDetailsComponent } from '../task-time-details/task-time-details.component';
@@ -15,6 +15,7 @@ import { State } from '../../../models/state';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     TaskCommentsViewComponent,
     TaskTimeDetailsComponent,
     TaskAttachmentsComponent,
@@ -23,9 +24,10 @@ import { State } from '../../../models/state';
   styleUrl: './task-view.component.css'
 })
 export class TaskViewComponent {
-  @Input() possibleStates: State[]= [];
-  editingFields : { [keys : string] : boolean} = {};
-  tempFields : { [keys : string] : string} = {};
+  taskForm!: FormGroup;
+  @Input() possibleStates: State[] = [];
+  editingFields: { [keys: string]: boolean } = {};
+  tempFields: { [keys: string]: string } = {};
   private destroy = new Subject<void>();
   @Input() taskDetails!: Task;
   selectedFileName: string | null = null;
@@ -33,9 +35,23 @@ export class TaskViewComponent {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['taskDetails'] && this.taskDetails) {
+      this.taskForm = this.fb.group({
+        taskName: [{ value: this.taskDetails.taskName ?? '', disabled: true }],
+        state: [this.taskDetails.state ?? ''],
+        taskMetadataDTO: this.fb.group({
+          description: [{ value: this.taskDetails.taskMetadataDTO?.description ?? '', disabled: true }],
+          assignedTo: [this.taskDetails.taskMetadataDTO?.assignedTo ?? '']
+        })
+      })
       this.hasWritePermission = this.taskDetails.permissionTypes.includes(PermissionType.WRITE);
     }
   }
+
+  get taskMetadataFormGroup(): FormGroup | null {
+    const ctrl = this.taskForm?.get('taskMetadataDTO');
+    return ctrl instanceof FormGroup ? ctrl : null;
+  }
+
 
   ngOnDestroy() {
     this.destroy.next();
@@ -48,33 +64,38 @@ export class TaskViewComponent {
 
   listenChanges() {
     this.taskContext.dualChanges.getListen().listener
-    .pipe(takeUntil(this.destroy))
-    .subscribe(([taskPatch, option]) => {
-      if (option !== "task-view") return;
-      this.taskDetails = {
-        ...this.taskDetails,
-        ...taskPatch
-      } as Task
-    })
+      .pipe(takeUntil(this.destroy))
+      .subscribe(([taskPatch, option]) => {
+        if (option !== "task-view") return;
+        this.taskDetails = {
+          ...this.taskDetails,
+          ...taskPatch
+        } as Task
+      })
   }
 
-  constructor(private taskContext : TaskContextService) { }
+  constructor(private taskContext: TaskContextService, private fb: FormBuilder) {
+  }
 
   onStateChange(event: Event): void {
     const selectedState = (event.target as HTMLSelectElement).value;
-    const state  = this.possibleStates.find(state => state.name === selectedState)?.name;
-    const patch : TaskPatch = {
-      fromState : this.taskDetails.state,
-      toState : state
+    const state = this.possibleStates.find(state => state.name === selectedState)?.name;
+    const patch: TaskPatch = {
+      fromState: this.taskDetails.state,
+      toState: state
     }
     this.taskContext.dualChanges.getIntent().add([patch, "task-view"]);
   }
 
-  enableEditing(field : string) : void {
+  enableEditing(field: string): void {
+    this.taskForm.get('taskMetadataDTO.description')?.enable();
     this.editingFields[field] = true;
-    switch(field) {
+    switch (field) {
       case "description":
-        this.tempFields[field] = this.taskDetails.taskMetadataDTO!.description;
+        const taskMetadata = this.taskDetails.taskMetadataDTO;
+        if (taskMetadata) {
+          this.tempFields[field] = this.taskDetails.taskMetadataDTO!.description;
+        }
         break;
       case "taskName":
         this.tempFields[field] = this.taskDetails.taskName;
@@ -82,15 +103,18 @@ export class TaskViewComponent {
     }
   }
 
-  isEditing(field : string) : boolean {
+  isEditing(field: string): boolean {
     return this.editingFields[field];
   }
 
-  disableEditing(field : string) : void {
+  disableEditing(field: string): void {
     this.editingFields[field] = false;
-    switch(field) {
+    switch (field) {
       case "description":
-        this.taskDetails.taskMetadataDTO!.description = this.tempFields[field];
+        const taskMetadata = this.taskDetails.taskMetadataDTO;
+        if (taskMetadata) {
+          this.taskDetails.taskMetadataDTO!.description = this.tempFields[field];
+        }
         break;
       case "taskName":
         this.taskDetails.taskName = this.tempFields[field];
@@ -98,10 +122,10 @@ export class TaskViewComponent {
     }
   }
 
-  saveChange(value : string, fieldName : string) {
+  saveChange(value: string, fieldName: string) {
     this.disableEditing(fieldName);
     const patch: TaskPatch = {};
-    switch(fieldName) {
+    switch (fieldName) {
       case "description":
         patch.taskMetadataDTO = patch.taskMetadataDTO ?? {};
         patch.taskMetadataDTO.description = value;

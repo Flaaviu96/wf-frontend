@@ -110,7 +110,7 @@
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
     >
       <div *ngFor="let task of pageResult?.content">
-        <app-task-card-view [taskSummary]="task"></app-task-card-view>
+        <app-task-card-view [projectKey]="projectKey" [taskSummary]="task"></app-task-card-view>
       </div>
     </div>
 

@@ -24,6 +24,7 @@ import { PageResultDTO } from '../../../models/pageResultDTO.model';
 export class TaskListViewComponent implements OnChanges {
   taskFilter: FormGroup;
   @Input() state: string[] = [];
+  @Input() projectKey = '';
   currentPage: number = 0;
   @Input() pageResult: PageResultDTO<TaskSummaryDTO> | null = null;
   @Output() filter = new EventEmitter<TaskFilter>();

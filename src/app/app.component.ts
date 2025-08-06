@@ -12,13 +12,11 @@ import { NavBarComponent } from "./shared/components/nav-bar/nav-bar.component";
 })
 export class AppComponent {
   title = 'workforge-front';
-  isLoggedIn : boolean = false;
 
   constructor(private authService : AuthService){}
 
   ngOnInit() {
-    this.authService.loginStatus.subscribe((status : boolean) => {
-      this.isLoggedIn = status;
-    })
+    console.log('calling');
+    this.authService.initAuthCheck();
   }
 }
