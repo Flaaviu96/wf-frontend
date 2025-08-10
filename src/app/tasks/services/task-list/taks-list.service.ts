@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { TaskFilter } from '../../../models/taskFilter.model';
+import { TaskFilter } from '../../../models/task/taskFilter.model';
 import { catchError, Observable, of, switchMap } from 'rxjs';
-import { TaskSummaryDTO } from '../../../models/taskSummaryDTO.model';
+import { TaskSummaryDTO } from '../../../models/task/taskSummaryDTO.model';
 import { ApiService } from '../../../core/services/api.service';
 import { HttpParams } from '@angular/common/http';
 import { enviroment } from '../../../enviroment';

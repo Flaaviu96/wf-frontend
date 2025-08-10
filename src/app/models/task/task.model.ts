@@ -1,8 +1,8 @@
 import { Taskmetadata } from "./task.metadata.model";
-import { Comment as AppComment } from "./comment.model";
+import { Comment as AppComment } from "../comment.model";
 import { TaskTimeTracking } from "./taskTimeTracking.model";
-import { PermissionType } from "./permission-type.model";
-import { Attachment } from "./attachment.model";
+import { PermissionType } from "../permission-type.model";
+import { Attachment } from "../attachment.model";
 
 export interface Task {
     id : number,

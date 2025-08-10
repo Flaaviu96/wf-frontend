@@ -1,4 +1,4 @@
-import { Task } from "./task.model";
+import { Task } from "./task/task.model";
 
 export interface Project {
     projectId : number,

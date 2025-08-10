@@ -1,0 +1,11 @@
+<app-task-comments-view
+[comments]="comments"
+[hasWritePermission]="hasWritePermission"
+[editingCommentId]="editingCommentId"
+[editingCommentContent]="tempComment"
+
+(editComment)="editComment($event)"
+(saveUpdatedComment)="updateComment($event)"
+(cancelEditingComment)="cancelEditing()"
+>
+</app-task-comments-view>

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Comment } from '../../../models/comment.model';
-import { DualStream } from '../dual-stream';
-import { Taskmetadata } from '../../../models/task.metadata.model';
-import { TaskPatch } from '../../../models/taskpatch.model';
 import { Attachment } from '../../../models/attachment.model';
+import { StreamService } from '../StreamService';
+import { TaskOperation } from '../../../models/task/taskOperation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +10,8 @@ import { Attachment } from '../../../models/attachment.model';
 export class TaskContextService {
   private currentProjectKey : string = '';
   private currentTaskKey : string = '';
-  dualComment = new DualStream<[Comment, boolean]>();
-  dualChanges = new DualStream<[TaskPatch, string]>();
-  dualAttachment = new DualStream<[Attachment, File, string]>();
+  streamComment = new StreamService<[Comment[]], [content: {comment? : Comment, operation? : TaskOperation, isListening?: boolean}]>();
+  streamAttachment = new StreamService<[Attachment[]], [payload: {attachment?: Attachment, file? : File, operation? :TaskOperation, isListening?: boolean}]>();
 
   constructor() { }
 

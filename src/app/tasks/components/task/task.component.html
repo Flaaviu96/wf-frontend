@@ -1,4 +1,15 @@
-<app-task-view 
-[taskDetails]="task"
-[possibleStates]="states"
+<app-task-view
+  *ngIf="taskForm && task"
+  [taskForm]="taskForm"
+  [hasWritePermission]="hasWritePermission"
+  [possibleStates]="states"
+  [taskDetails]="{
+    commentDTOS: task.commentDTOS ?? [],
+    attachmentDTOS: task.attachmentDTOS ?? [],
+  }"
+
+(saveField)="saveField($event)"
+(cancelEditing)="cancelEditing($event)"
+(enableEditing)="enableEditing($event)"
+(stateChange)="stateChange($event)"
 ></app-task-view>

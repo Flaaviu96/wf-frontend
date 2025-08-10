@@ -1,6 +1,11 @@
 <app-task-list-view
-  [projectKey]="projectKey"
-  [pageResult]="pageResult"
-  (filter)="filterTasks($event)"
-  [state]="state"
+[taskFilter]="taskFilter"
+[state]="state"
+[projectKey]="projectKey"
+[currentPage]="currentPage"
+[pageResult]="pageResult"
+
+
+(filter)="filterTasks($event)"
+(nextPage)="nextPage($event)"
 ></app-task-list-view>

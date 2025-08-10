@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { ProjectViewComponent } from '../project-view/project-view.component';
-import { Task } from '../../../models/task.model';
+import { Task } from '../../../models/task/task.model';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavBarComponent } from "../../../shared/components/nav-bar/nav-bar.component";

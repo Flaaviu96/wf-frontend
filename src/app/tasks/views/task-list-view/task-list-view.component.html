@@ -97,7 +97,7 @@
     </div>
     <button
       type="button"
-      (click)="filterTask()"
+      (click)="filter.emit(taskFilter.value)"
       class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 shadow-md transition duration-200 ease-in-out transform hover:scale-105"
     >
       Apply Filters
@@ -118,7 +118,7 @@
       <div *ngIf="currentPage >= 1">
         <button
           [disabled]="currentPage === 1"
-          (click)="nextPage(false)"
+          (click)="nextPage.emit(false)"
           class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 ease-in-out"
         >
           Previous
@@ -127,7 +127,7 @@
       <div *ngIf="currentPage === 1 && pageResult?.hasNextPage">
         <button
           [disabled]="!pageResult?.hasNextPage"
-          (click)="nextPage(true)"
+          (click)="nextPage.emit(true)"
           class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-300 transition duration-300 ease-in-out"
         >
           Next

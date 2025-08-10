@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Task } from '../../../models/task.model';
+import { Task } from '../../../models/task/task.model';
 import { PanelBoardComponent } from '../../../shared/components/panel-board/panel-board.component';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CommentComponent } from './comment.component';
+import { TaskCommentComponent } from './task-comment.component';
 
-describe('CommentComponent', () => {
-  let component: CommentComponent;
-  let fixture: ComponentFixture<CommentComponent>;
+describe('TaskCommentComponent', () => {
+  let component: TaskCommentComponent;
+  let fixture: ComponentFixture<TaskCommentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommentComponent]
+      imports: [TaskCommentComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CommentComponent);
+    fixture = TestBed.createComponent(TaskCommentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

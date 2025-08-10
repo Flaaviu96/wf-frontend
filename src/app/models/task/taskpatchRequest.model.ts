@@ -1,7 +1,7 @@
 import { Taskmetadata } from "./task.metadata.model";
 import { TaskTimeTracking } from "./taskTimeTracking.model";
 
-export interface TaskPatch {
+export interface TaskPatchRequest {
   taskName?: string,
   toState?: string,
   fromState?: string, 
