@@ -27,8 +27,7 @@ export class TaksListService {
       nextCursorId: 0,
       prevCursorId: 0
     };
-
-
+    console.log(taskFilter, 'din service');
     return this.projectCache.getProjectId(projectKey).pipe(
       switchMap(projectId => {
         let params = this.populateParams(taskFilter);

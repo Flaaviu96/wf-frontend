@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { TaskService } from '../../services/task/task.service';
 import { ActivatedRoute } from '@angular/router';
 import { Task } from '../../../models/task/task.model';
@@ -16,6 +16,7 @@ import { TaskOperation } from '../../../models/task/taskOperation.model';
 import { TaskViewComponent } from '../../views/task-view/task-view.component';
 import { Taskmetadata } from '../../../models/task/task.metadata.model';
 import { TaskPatchResponse } from '../../../models/task/taskpatchResponse.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-task',
@@ -24,6 +25,7 @@ import { TaskPatchResponse } from '../../../models/task/taskpatchResponse.model'
   styleUrl: './task.component.css',
 })
 export class TaskComponent implements OnInit, OnDestroy {
+  private snackBar = inject(MatSnackBar);
   task!: Task;
   states: State[] = [];
   private destroy = new Subject<void>();
@@ -37,7 +39,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     private context: TaskContextService,
     private workflowService: WorkflowService,
     private fb: FormBuilder
-  ) {}
+  ) { }
 
   ngOnDestroy(): void {
     this.destroy.next();
@@ -53,7 +55,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.taskForm.get(payload.field)?.disable();
     const patch: TaskPatchRequest = {};
     switch (payload.field) {
-      case 'description':
+      case 'taskMetadataDTO.description':
         patch.taskMetadataDTO = patch.taskMetadataDTO ?? {};
         patch.taskMetadataDTO.description = payload.value;
         break;
@@ -62,21 +64,6 @@ export class TaskComponent implements OnInit, OnDestroy {
         break;
     }
     this.updateTask(patch);
-  }
-
-  updateTaskFromTaskPatch(taskpatch: TaskPatchResponse) {
-      if (taskpatch.taskName !== undefined)
-        this.task.taskName = taskpatch.taskName;
-      if (taskpatch.state !== undefined) {
-      this.task.state = taskpatch.state;
-      this.taskForm.get('state')?.setValue(taskpatch.state);
-    }
-      if (taskpatch.taskMetadataDTO !== undefined) {
-        this.task.taskMetadataDTO = {
-          ...this.task.taskMetadataDTO,
-          ...this.pickDefined(taskpatch.taskMetadataDTO),
-        } as Taskmetadata;
-      }
   }
 
   cancelEditing(field: string) {
@@ -89,6 +76,21 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.taskForm.get(event.field)?.enable();
   }
 
+  updateTaskFromTaskPatch(taskpatch: TaskPatchResponse) {
+    if (taskpatch.taskName !== undefined)
+      this.task.taskName = taskpatch.taskName;
+    if (taskpatch.state !== undefined) {
+      this.task.state = taskpatch.state;
+      this.taskForm.get('state')?.setValue(taskpatch.state);
+    }
+    if (taskpatch.taskMetadataDTO !== undefined) {
+      this.task.taskMetadataDTO = {
+        ...this.task.taskMetadataDTO,
+        ...this.pickDefined(taskpatch.taskMetadataDTO),
+      } as Taskmetadata;
+    }
+  }
+
   stateChange(value: string) {
     const patch: TaskPatchRequest = {
       fromState: this.task.state,
@@ -98,9 +100,47 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   updateTask(taskpatch: TaskPatchRequest) {
-    this.taskService.updateTaskMetadata(taskpatch).subscribe((taskpatch) => {
-      this.updateTaskFromTaskPatch(taskpatch);
+    this.taskService.updateTaskMetadata(taskpatch).subscribe({
+      next: (taskpatchResponse) => {
+        this.updateTaskFromTaskPatch(taskpatchResponse);
+        this.showSuccess("Task updated");
+      },
+      error: (err) => {
+        this.resetField(this.findField(taskpatch));
+        this.showFailed("Cannot update the task");
+      }
     });
+  }
+
+  findField(_taskPatch: TaskPatchRequest) {
+    let foundFields: string[] = [];
+
+    const find = (_taskPatch: TaskPatchRequest, prefix = '') => {
+      Object.entries(_taskPatch).forEach(([key, value]) => {
+
+        if (value !== undefined && value !== null && typeof value !== 'object') {
+          const fieldName = prefix ? `${prefix}.${key}` : key;
+          foundFields.push(fieldName);
+        }
+        else if (value && typeof value === 'object') {
+          const newPrefix = prefix ? `${prefix}.${key}` : key;
+          find(value, newPrefix);
+        }
+      });
+    }
+    find(_taskPatch);
+    return foundFields[0];
+  };
+
+  resetField(field: string) {
+    switch (field) {
+      case 'taskMetadataDTO.description':
+        this.taskForm.get('taskMetadataDTO.description')?.setValue(this.tempFields[field]);
+        break;
+      case 'taskname':
+        this.taskForm.get('taskname')?.setValue(this.tempFields[field]);
+        break;
+    }
   }
 
   pickDefined<T>(obj: Partial<T>): Partial<T> {
@@ -117,11 +157,16 @@ export class TaskComponent implements OnInit, OnDestroy {
     const combinedId = this.route.snapshot.paramMap.get('combinedId')!;
     const [projectKey, taskId] = combinedId.split('-');
     if (!taskId || !projectKey) return;
-    this.taskService
-      .getTask(projectKey, taskId)
-      .subscribe(({ task, states }) => {
+    this.taskService.getTask(projectKey, taskId).subscribe({
+      next: ({ task, states }) => {
         this.initializeTask(task, states);
-      });
+      },
+      error: (err) => {
+        this.showFailed("Cannot loading the task");
+        console.error('Error loading task', err);
+      }
+    });
+
   }
 
   initializeTask(task: Task, states: State[]): void {
@@ -167,121 +212,43 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   listenComment() {
     this.context.streamComment.outputStream.listener
-      .pipe(takeUntil(this.destroy))
-      .subscribe(([{ comment, operation, isListening }]) => {
-        this.handleComment({ comment, operation, isListening });
-      });
+    .pipe(takeUntil(this.destroy))
+    .subscribe(([isListening]) => {
+      this.handleSignal(isListening);
+    })
   }
 
-  private handleComment(content: {
-    comment?: Comment;
-    operation?: string;
-    isListening?: boolean;
-  }) {
-    if (content.isListening && this.task.commentDTOS) {
-      this.context.streamComment.inputStream.add([this.task.commentDTOS]);
-    }
-
-    if (content.comment && content.operation) {
-      switch (content.operation) {
-        case TaskOperation.Add:
-          this.taskService
-            .saveComment(content.comment)
-            .subscribe((newComment) => {
-              this.context.streamComment.inputStream.add([[newComment]]);
-            });
-          break;
-        case TaskOperation.Delete:
-          break;
-        case TaskOperation.Update:
-          this.taskService
-            .updateComment(content.comment)
-            .subscribe((updatedComment) => {
-              this.context.streamComment.inputStream.add([[updatedComment]]);
-            });
-          break;
-      }
+  private handleSignal(isListening : boolean) {
+    if (isListening === true && this.task.commentDTOS) {
+      this.context.streamComment.inputStream.add([{comments: this.task.commentDTOS, hasPermissions: this.hasWritePermission}]);
     }
   }
 
   listenAttachments() {
     this.context.streamAttachment.outputStream.listener
       .pipe(takeUntil(this.destroy))
-      .subscribe(([{ attachment, file, operation, isListening }]) => {
-        this.handleAttachment({ attachment, file, operation, isListening });
+      .subscribe(([isListening]) => {
+        this.handleAttachmentSignal(isListening);
       });
   }
 
-  private handleAttachment(payload: {
-    attachment?: Attachment;
-    file?: File;
-    operation?: TaskOperation;
-    isListening?: boolean;
-  }) {
-    const attachments = this.task.attachmentDTOS;
-    if (payload.isListening && attachments) {
-      this.context.streamAttachment.inputStream.add([attachments]);
-    }
-    if (!payload.operation) return;
-    switch (payload.operation) {
-      case TaskOperation.Add:
-        if (!payload.file) return;
-        this.uploadNewAttachment(payload.file);
-        break;
-
-      case TaskOperation.Delete:
-        if (!payload.attachment) return;
-        this.deleteAttachment(payload.attachment);
-        break;
-
-      case TaskOperation.Download:
-        if (!payload.attachment) return;
-        this.downloadAttachment(payload.attachment.id);
-        break;
+  handleAttachmentSignal(isListening : boolean) {
+    if (isListening === true && this.task.attachmentDTOS) {
+      this.context.streamAttachment.inputStream.add([{attachments: this.task.attachmentDTOS, hasPermissions: this.hasWritePermission}]);
     }
   }
 
-  private deleteAttachment(attachment: Attachment) {
-    this.taskService.deleteAttachment(attachment.id).subscribe({
-      next: () => console.log('Delete successful'),
-      error: (err) => {
-        console.log('Backend error occured: ', err);
-      },
+  showSuccess(message: string) {
+    this.snackBar.open(message, undefined, {
+      panelClass: ['bg-green-500', 'text-white', 'font-bold'],
+      duration: 3000
     });
   }
 
-  private uploadNewAttachment(file: File) {
-    this.taskService.uploadAttachment(file).subscribe((attachment) => {
-      const emptyFile = new File([new Blob()], 'empty.txt');
-      this.context.streamAttachment.inputStream.add([[attachment]]);
+  showFailed(message: string) {
+    this.snackBar.open(message, undefined, {
+      panelClass: ['bg-red-500', 'text-white', 'font-bold'],
+      duration: 3000
     });
-  }
-
-  private downloadAttachment(attachmentId: number) {
-    this.taskService.downloadAttachment(attachmentId).subscribe((response) => {
-      const blob = response.body!;
-      const contentDisposition = response.headers.get('Content-Disposition');
-      const filename =
-        this.extractFilenameFromContentDisposition(contentDisposition);
-      this.downloadBlob(blob, filename);
-    });
-  }
-
-  private downloadBlob(blob: Blob, filename: string): void {
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = filename;
-
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-    URL.revokeObjectURL(url);
-  }
-
-  extractFilenameFromContentDisposition(header: string | null): string {
-    if (!header) return 'downloaded-file';
-    const match = header.match(/filename="?([^"]+)"?/);
-    return match && match[1] ? match[1] : 'downloaded-file';
   }
 }

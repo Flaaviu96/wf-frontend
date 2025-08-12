@@ -3,6 +3,7 @@ import { Comment } from '../../../models/comment.model';
 import { Attachment } from '../../../models/attachment.model';
 import { StreamService } from '../StreamService';
 import { TaskOperation } from '../../../models/task/taskOperation.model';
+import { EventStream } from '../event-stream';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,8 @@ import { TaskOperation } from '../../../models/task/taskOperation.model';
 export class TaskContextService {
   private currentProjectKey : string = '';
   private currentTaskKey : string = '';
-  streamComment = new StreamService<[Comment[]], [content: {comment? : Comment, operation? : TaskOperation, isListening?: boolean}]>();
-  streamAttachment = new StreamService<[Attachment[]], [payload: {attachment?: Attachment, file? : File, operation? :TaskOperation, isListening?: boolean}]>();
+  streamComment = new StreamService<[payload: {comments: Comment[], hasPermissions: boolean}], [isListening: boolean]>();
+  streamAttachment = new StreamService<[payload: {attachments: Attachment[], hasPermissions: boolean}], [isListening: boolean]>();
 
   constructor() { }
 

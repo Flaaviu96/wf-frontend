@@ -1,1 +1,8 @@
-<app-task-attachment-view></app-task-attachment-view>
+<app-task-attachment-view
+[hasWritePermission]="hasWritePermission"
+[attachments]="attachments"
+
+(uploadAttachment)="onFileSelected($event)"
+(deleteAttachment)="deleteAttachment($event)"
+(downloadAttachment)="downloadAttachment($event)"
+></app-task-attachment-view>

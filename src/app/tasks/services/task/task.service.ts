@@ -21,7 +21,6 @@ export class TaskService {
     private projectCache: ProjectCacheService,
     private context : TaskContextService,
     private workflow : WorkflowService
-
   ) { }
 
   getTask(projectKey: string, taskId: string): Observable<{ task: Task, states: State[] }> {
@@ -41,41 +40,9 @@ export class TaskService {
     )
   }
 
-  updateComment(comment: Comment): Observable<Comment> {
-    const { projectKey, taskKey } = this.context.getProjectAndTaskKeys();
-    const url = enviroment.apiCommentUrl(projectKey, taskKey);
-    return this.apiService.patch<Comment>(url, comment, { withCredentials: true })
-  }
-
-  saveComment(comment: Comment): Observable<Comment> {
-    const { projectKey, taskKey } = this.context.getProjectAndTaskKeys();
-    const url = enviroment.apiCommentUrl(projectKey, taskKey);
-    return this.apiService.post<Comment>(url, comment, { withCredentials: true });
-  }
-
   updateTaskMetadata(patch: TaskPatchRequest): Observable<TaskPatchResponse> {
     const { projectKey, taskKey } = this.context.getProjectAndTaskKeys();
     const url = enviroment.apiTaskMetadataUrl(projectKey, taskKey);
     return this.apiService.patch<TaskPatchResponse>(url, patch, { withCredentials: true });
-  }
-
-  uploadAttachment(file: File): Observable<Attachment> {
-    const { projectKey, taskKey} = this.context.getProjectAndTaskKeys();
-    const url = enviroment.apiAttachmentsUrl(projectKey, taskKey);
-    const formData = new FormData();
-    formData.append('file', file);
-    return this.apiService.post<Attachment>(url, formData, { withCredentials: true });
-  }
-
-  deleteAttachment(attachmentId: number): Observable<any> {
-    const { projectKey, taskKey} = this.context.getProjectAndTaskKeys();
-    const url = enviroment.apiAttachmentUrl(projectKey, taskKey, attachmentId);
-    return this.apiService.delete(url, { withCredentials: true });
-  }
-
-  downloadAttachment(attachmentId: number): Observable<any> {
-    const { projectKey, taskKey} = this.context.getProjectAndTaskKeys();
-    const url = enviroment.apiAttachmentUrl(projectKey, taskKey, attachmentId);
-    return this.apiService.get(url, { withCredentials: true, responseType: 'blob', observe: 'response' });
   }
 }

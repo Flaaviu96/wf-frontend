@@ -1,255 +1,202 @@
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Task View</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-      }
 
-      .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-      body {
-        font-family: "Inter", sans-serif;
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task View</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
 
-  <body
-    class="bg-gray-50 font-sans antialiased flex flex-col items-center p-8 min-h-screen"
-  >
-    <div *ngIf="taskForm" [formGroup]="taskForm" class="max-w-7xl w-full">
-      <div
-        class="flex flex-col md:flex-row md:items-center justify-between mb-8"
-      >
-        <h1 class="text-4xl font-extrabold text-gray-900 mb-4 md:mb-0">
-          {{ taskForm.get("taskName")?.value }}
-        </h1>
-        <div class="flex flex-wrap gap-4 items-center">
-          <div class="relative">
-            <select
-              (change)="onStateChange($event)"
-              [disabled]="!hasWritePermission"
-              class="block appearance-none w-full bg-blue-600 text-white px-6 py-2.5 pr-10 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-60 disabled:bg-gray-400 disabled:cursor-not-allowed text-lg font-medium"
-              aria-label="Select Task Status"
-            >
-              <option value="" disabled selected>Change Status</option>
-              <option
-                *ngFor="let stateOption of possibleStates"
-                [value]="stateOption.name"
-              >
-                {{ stateOption.name }}
-              </option>
-            </select>
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white"
-            >
-              <i class="fas fa-chevron-down text-sm"></i>
-            </div>
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans antialiased flex flex-col items-center p-8 min-h-screen">
+  <div *ngIf="taskForm" [formGroup]="taskForm" class="max-w-7xl w-full">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+      <h1 class="text-4xl font-extrabold text-gray-900 mb-4 md:mb-0">
+        {{ taskForm.get("taskName")?.value }}
+      </h1>
+      <div class="flex flex-wrap gap-4 items-center">
+        <div class="relative">
+          <select (change)="onStateChange($event)" [disabled]="!hasWritePermission"
+            class="block appearance-none w-full bg-blue-600 text-white px-6 py-2.5 pr-10 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-60 disabled:bg-gray-400 disabled:cursor-not-allowed text-lg font-medium"
+            aria-label="Select Task Status">
+            <option value="" disabled selected>Change Status</option>
+            <option *ngFor="let stateOption of possibleStates" [value]="stateOption.name">
+              {{ stateOption.name }}
+            </option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
+            <i class="fas fa-chevron-down text-sm"></i>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="flex flex-col lg:flex-row gap-8 w-full">
-        <div
-          class="flex-1 bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6 border border-gray-200"
-        >
-          <h2 class="text-2xl font-bold text-gray-800 border-b pb-4">
-            Task Details
-          </h2>
+    <div class="flex flex-col lg:flex-row gap-8 w-full">
+      <div class="flex-1 bg-white rounded-xl shadow-lg p-8 flex flex-col gap-6 border border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-800 border-b pb-4">
+          Task Details
+        </h2>
 
-          <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
-            <p class="text-gray-700 text-lg font-semibold min-w-[80px]">
-              Name:
-            </p>
-            <div class="flex flex-grow items-center gap-4 mt-2 sm:mt-0">
-              <input
-                id="taskName"
-                formControlName="taskName"
-                class="flex-grow rounded-lg border border-gray-300 px-4 py-2 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:border-transparent disabled:text-gray-700 disabled:cursor-default"
-                [ngClass]="{
+        <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+          <p class="text-gray-700 text-lg font-semibold min-w-[80px]">
+            Name:
+          </p>
+          <div class="flex flex-grow items-center gap-4 mt-2 sm:mt-0">
+            <input id="taskName" formControlName="taskName"
+              class="flex-grow rounded-lg border border-gray-300 px-4 py-2 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:border-transparent disabled:text-gray-700 disabled:cursor-default"
+              [ngClass]="{
                   'ring-2 ring-blue-500 ring-offset-2': isEditing('taskName')
-                }"
-              />
-              <div class="flex space-x-3">
-                <button
-                  *ngIf="!isEditing('taskName') && hasWritePermission"
-                  (click)="
+                }" />
+            <div class="flex space-x-3">
+              <button *ngIf="!isEditing('taskName') && hasWritePermission" (click)="
                     enableEditing.emit({
                       field: 'taskName',
                       value: taskForm.get('taskName')?.value
                     })
                   "
-                  class="text-blue-600 hover:text-blue-800 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
-                  aria-label="Edit task name"
-                >
-                  <i class="fas fa-pencil-alt text-lg"></i>
-                </button>
-                <button
-                  *ngIf="isEditing('taskName')"
-                  (click)="
+                class="text-blue-600 hover:text-blue-800 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
+                aria-label="Edit task name">
+                <i class="fas fa-pencil-alt text-lg"></i>
+              </button>
+              <button *ngIf="isEditing('taskName')" (click)="
                     saveField.emit({
                       field: 'taskName',
                       value: taskForm.get('taskName')?.value
                     })
                   "
-                  class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700 transition duration-300 text-sm font-medium"
-                >
-                  Save
-                </button>
-                <button
-                  *ngIf="isEditing('taskName')"
-                  (click)="cancelEditing.emit('taskName')"
-                  class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-300 transition duration-300 text-sm font-medium"
-                >
-                  Cancel
-                </button>
-              </div>
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700 transition duration-300 text-sm font-medium">
+                Save
+              </button>
+              <button *ngIf="isEditing('taskName')" (click)="cancelEditing.emit('taskName')"
+                class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-300 transition duration-300 text-sm font-medium">
+                Cancel
+              </button>
             </div>
           </div>
+        </div>
 
-          <p class="text-gray-700 text-lg">
-            <strong class="font-semibold">Status:</strong>
-            <span class="ml-2 px-4 py-1.5 rounded-full text-base font-semibold">
-              {{ taskForm.get("state")?.value }}
-            </span>
-          </p>
+        <p class="text-gray-700 text-lg">
+          <strong class="font-semibold">Status:</strong>
+          <span class="ml-2 px-4 py-1.5 rounded-full text-base font-semibold">
+            {{ taskForm.get("state")?.value }}
+          </span>
+        </p>
 
-          <div class="border-t border-gray-200 my-4"></div>
+        <div class="border-t border-gray-200 my-4"></div>
 
-          <div
-            *ngIf="taskMetadataFormGroup"
-            [formGroup]="taskMetadataFormGroup"
-            class="flex flex-col"
-          >
-            <p class="text-gray-700 text-lg font-semibold mb-2">Description:</p>
-            <div class="flex flex-col w-full">
-              <textarea
-                id="description"
-                formControlName="description"
-                class="rounded-lg w-full h-32 border border-gray-300 px-4 py-3 text-gray-800 resize-y transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:border-transparent disabled:text-gray-700 disabled:cursor-default"
-                [ngClass]="{
+        <div *ngIf="taskMetadataFormGroup" [formGroup]="taskMetadataFormGroup" class="flex flex-col">
+          <p class="text-gray-700 text-lg font-semibold mb-2">Description:</p>
+          <div class="flex flex-col w-full">
+            <textarea id="description" formControlName="description"
+              class="rounded-lg w-full h-32 border border-gray-300 px-4 py-3 text-gray-800 resize-y transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:border-transparent disabled:text-gray-700 disabled:cursor-default"
+              [ngClass]="{
                   'ring-2 ring-blue-500 ring-offset-2': isEditing(
                     'taskMetadataDTO.description'
                   )
-                }"
-              ></textarea>
-            </div>
-            <div class="flex w-full space-x-3 justify-end mt-4">
-              <button
-                *ngIf="
+                }"></textarea>
+          </div>
+          <div class="flex w-full space-x-3 justify-end mt-4">
+            <button *ngIf="
                   !isEditing('taskMetadataDTO.description') &&
                   hasWritePermission
-                "
-                (click)="
+                " (click)="
                   enableEditing.emit({
                     field: 'taskMetadataDTO.description',
                     value: taskForm.get('taskMetadataDTO.description')?.value
                   })
                 "
-                class="text-blue-600 hover:text-blue-800 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
-                aria-label="Edit description"
-              >
-                <i class="fas fa-pencil-alt text-lg"></i>
-              </button>
-              <button
-                *ngIf="isEditing('taskMetadataDTO.description')"
-                (click)="
+              class="text-blue-600 hover:text-blue-800 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
+              aria-label="Edit description">
+              <i class="fas fa-pencil-alt text-lg"></i>
+            </button>
+            <button *ngIf="isEditing('taskMetadataDTO.description')" (click)="
                   saveField.emit({
                     field: 'taskMetadataDTO.description',
-                    value: taskForm.get('description')?.value
+                    value: taskForm.get('taskMetadataDTO.description')?.value
                   })
                 "
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700 transition duration-300 text-sm font-medium"
-              >
-                Save
-              </button>
-              <button
-                *ngIf="isEditing('taskMetadataDTO.description')"
-                (click)="cancelEditing.emit('taskMetadataDTO.description')"
-                class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-300 transition duration-300 text-sm font-medium"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-
-          <div class="border-t border-gray-200 my-4"></div>
-
-          <app-task-attachments
-            [hasWritePermission]="hasWritePermission"
-          ></app-task-attachments>
-
-          <div class="border-t border-gray-200 my-4"></div>
-
-          <div class="mt-4">
-            <app-task-comment
-              [hasWritePermission]="hasWritePermission"
-            ></app-task-comment>
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700 transition duration-300 text-sm font-medium">
+              Save
+            </button>
+            <button *ngIf="isEditing('taskMetadataDTO.description')"
+              (click)="cancelEditing.emit('taskMetadataDTO.description')"
+              class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-300 transition duration-300 text-sm font-medium">
+              Cancel
+            </button>
           </div>
         </div>
 
-        <div
-        *ngIf="taskForm" [formGroup]="taskForm"
-        class="w-full lg:w-80 bg-white rounded-xl shadow-xl p-8 flex flex-col gap-6 flex-shrink-0 border border-gray-200"
-        >
-          <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
-            Time details
-          </h2>
-          <div class="flex justify-between items-center">
-            <p *ngIf="!isEditing" class="text-gray-700">
-              <strong>Assigned:</strong> {{ taskForm.get('taskMetadataDTO.assignedTo')?.value }}
-            </p>
-            <!-- <button
+        <div class="border-t border-gray-200 my-4"></div>
+
+        <app-task-attachments></app-task-attachments>
+
+        <div class="border-t border-gray-200 my-4"></div>
+
+        <div class="mt-4">
+          <app-task-comment></app-task-comment>
+        </div>
+      </div>
+
+      <div *ngIf="taskForm" [formGroup]="taskForm"
+        class="w-full lg:w-80 bg-white rounded-xl shadow-xl p-8 flex flex-col gap-6 flex-shrink-0 border border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">
+          Time details
+        </h2>
+        <div class="flex justify-between items-center">
+          <p *ngIf="!isEditing" class="text-gray-700">
+            <strong>Assigned:</strong> {{ taskForm.get('taskMetadataDTO.assignedTo')?.value }}
+          </p>
+          <!-- <button
               *ngIf="!isEditing"
               (click)="assignNewUser()"
               class="text-blue-600 hover:text-blue-800 transition duration-300"
             >
               <i class="fas fa-pencil-alt"></i>
             </button> -->
-            <div *ngIf="isEditing">
-              <app-user-search-select></app-user-search-select>
-            </div>
+          <div *ngIf="isEditing">
+            <app-user-search-select></app-user-search-select>
           </div>
-          <p class="text-gray-700">
-            <strong>Created date:</strong>
-            {{ taskForm.get('createdDate')?.value| date : "dd/MM/yyyy HH:mm" }}
-          </p>
-          <p class="text-gray-700">
-            <strong>Last modified:</strong>
-            {{ taskForm.get('modifiedDate')?.value | date : "dd/MM/yyyy HH:mm" }}
-          </p>
+        </div>
+        <p class="text-gray-700">
+          <strong>Created date:</strong>
+          {{ taskForm.get('createdDate')?.value| date : "dd/MM/yyyy HH:mm" }}
+        </p>
+        <p class="text-gray-700">
+          <strong>Last modified:</strong>
+          {{ taskForm.get('modifiedDate')?.value | date : "dd/MM/yyyy HH:mm" }}
+        </p>
 
-          <h3 class="text-xl font-bold text-gray-800 mt-5 border-b pb-4">
-            Tracking time
-          </h3>
+        <h3 class="text-xl font-bold text-gray-800 mt-5 border-b pb-4">
+          Tracking time
+        </h3>
 
-          <div class="w-full">
-            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-              <div
-                class="bg-blue-600 h-2.5 rounded-full"
-                style="width: 60%"
-              ></div>
-            </div>
-
-            <p class="mt-2 text-sm text-gray-700">
-              18 zile trecute / 12 zile rămase
-            </p>
+        <div class="w-full">
+          <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 60%"></div>
           </div>
+
+          <p class="mt-2 text-sm text-gray-700">
+            18 zile trecute / 12 zile rămase
+          </p>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

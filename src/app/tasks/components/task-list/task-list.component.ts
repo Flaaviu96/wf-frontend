@@ -46,17 +46,17 @@ export class TaskListComponent {
   }
 
   filterTasks(taskFilter: TaskFilter) {
-    console.log(this.taskFilter.value);
+    let newTaskFilter = { ...taskFilter };
+
     if (this.currentPage === 0) {
-      const taskFilter: TaskFilter = {
-        ...this.taskFilter.value,
-        firstSearch: true,
-      };
+      newTaskFilter.firstSearch = true;
     }
+
     this.taskListService
-      .filterTasks(this.projectKey, taskFilter)
+      .filterTasks(this.projectKey, newTaskFilter)
       .subscribe((page) => {
         this.pageResult = page;
+        this.currentPage++;
       });
   }
 
@@ -73,6 +73,6 @@ export class TaskListComponent {
       nextPage: next,
     };
     this.filterTasks(taskFilter);
-    next? this.currentPage ++ : this.currentPage --;
+    next ? this.currentPage++ : this.currentPage--;
   }
 }

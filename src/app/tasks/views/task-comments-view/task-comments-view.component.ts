@@ -29,4 +29,8 @@ export class TaskCommentsViewComponent {
   @Output() cancelEditingComment = new EventEmitter<boolean>();
 
   comment : string = '';
+
+  ngOnInit() {
+    console.log(this.comments);
+  }
 }
