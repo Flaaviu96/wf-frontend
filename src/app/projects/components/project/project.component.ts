@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
-import { ProjectViewComponent } from '../project-view/project-view.component';
+import { ProjectViewComponent } from '../../views/project-view/project-view.component';
 import { Task } from '../../../models/task/task.model';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -37,7 +37,6 @@ export class ProjectComponent {
       },
       error: (err) => {
         this.errorStatus = err.status;
-        console.log(this.errorStatus);
       },
     });
   }

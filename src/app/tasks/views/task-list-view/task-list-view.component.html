@@ -124,7 +124,7 @@
           Previous
         </button>
       </div>
-      <div *ngIf="currentPage === 1 && pageResult?.hasNextPage">
+      <div *ngIf="currentPage >= 1 && pageResult?.hasNextPage">
         <button
           [disabled]="!pageResult?.hasNextPage"
           (click)="nextPage.emit(true)"

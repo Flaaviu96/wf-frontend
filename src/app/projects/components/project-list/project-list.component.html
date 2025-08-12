@@ -1,1 +1,7 @@
-<app-project-list-view  [projects]="projects"></app-project-list-view>
+<app-project-list-view 
+ [projects]="projects"
+ (createProject)="createProject()"
+ ></app-project-list-view>
+ <div *ngIf="enableCreateProjectDialog">
+     <app-project-create></app-project-create>
+ </div>

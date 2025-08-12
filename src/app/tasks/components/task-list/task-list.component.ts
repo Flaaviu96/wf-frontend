@@ -61,7 +61,6 @@ export class TaskListComponent {
   }
 
   nextPage(next: boolean) {
-    console.log(this.taskFilter.value);
     const lastTask = next
       ? this.pageResult?.nextCursorId
       : this.pageResult?.prevCursorId;
@@ -72,6 +71,7 @@ export class TaskListComponent {
       cursorTaskId: lastTask,
       nextPage: next,
     };
+    console.log("taskfilter", taskFilter);
     this.filterTasks(taskFilter);
     next ? this.currentPage++ : this.currentPage--;
   }

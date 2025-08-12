@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Comment } from '../../../models/comment.model';
 import { Attachment } from '../../../models/attachment.model';
-import { StreamService } from '../StreamService';
-import { TaskOperation } from '../../../models/task/taskOperation.model';
-import { EventStream } from '../event-stream';
+import { StreamService } from '../../../shared/services/stream-service/StreamService';
 
 @Injectable({
   providedIn: 'root'

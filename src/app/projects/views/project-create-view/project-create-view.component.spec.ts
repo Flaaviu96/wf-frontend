@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProjectCreateDialogComponent } from './project-create-dialog.component';
+import { ProjectCreateDialogComponent } from './project-create-view.component';
 
 describe('ProjectCreateDialogComponent', () => {
   let component: ProjectCreateDialogComponent;
