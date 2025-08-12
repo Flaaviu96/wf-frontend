@@ -7,9 +7,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {
+  FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { UserSearchSelectComponent } from '../../../shared/components/user-search-select/user-search-select.component';
 import { CommonModule } from '@angular/common';
@@ -34,15 +36,26 @@ import { createNewProject } from '../../../models/createProject.model';
   styleUrl: './project-create-view.component.css',
 })
 export class ProjectCreateViewComponent {
-  @Input() projectForm!: FormGroup;
-  @Input() errorMessage: string = '';
+  projectForm: FormGroup;
+  errorMessage: string = '';
   @Output() newProject = new EventEmitter<boolean>();
 
+  constructor(
+    public dialogRef: MatDialogRef<ProjectCreateViewComponent>,
+    private fb: FormBuilder
+  ) {
+    {
+      this.projectForm = this.fb.group({
+        projectName: ['', Validators.required],
+        projectDescription: [''],
+        projectOwner: ['', Validators.required],
+      });
+    }
 
-
-  selectedProjectOwner(username: string) {
-    this.projectForm.patchValue({
-      projectOwner: username,
-    });
+    // selectedProjectOwner(username: string) {
+    //   this.projectForm.patchValue({
+    //     projectOwner: username,
+    //   });
+    // }
   }
 }
