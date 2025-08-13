@@ -16,6 +16,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class TaskListComponent {
   state: string[] = [];
   taskFilter: FormGroup;
+  initialTaskFilterValue: any;
   pageResult: PageResultDTO<TaskSummaryDTO> | null = null;
   projectKey = '';
   currentPage: number = 0;
@@ -34,8 +35,17 @@ export class TaskListComponent {
     });
   }
 
+  listeForChanges() {
+    this.taskFilter.valueChanges.subscribe(value => {
+      if (this.currentPage !== 0) {
+        this.currentPage = 0;
+      }
+    });
+  }
+
   ngOnInit() {
     this.fetchWorkflow();
+    this.listeForChanges();
   }
 
   fetchWorkflow() {
@@ -50,13 +60,13 @@ export class TaskListComponent {
 
     if (this.currentPage === 0) {
       newTaskFilter.firstSearch = true;
+      this.currentPage ++;
     }
 
     this.taskListService
       .filterTasks(this.projectKey, newTaskFilter)
       .subscribe((page) => {
         this.pageResult = page;
-        this.currentPage++;
       });
   }
 
@@ -71,7 +81,6 @@ export class TaskListComponent {
       cursorTaskId: lastTask,
       nextPage: next,
     };
-    console.log("taskfilter", taskFilter);
     this.filterTasks(taskFilter);
     next ? this.currentPage++ : this.currentPage--;
   }

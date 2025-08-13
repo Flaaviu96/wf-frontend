@@ -1,41 +1,25 @@
 <div class="flex h-full overflow-hidden">
   <!-- Filter Panel - Left Side -->
-  <div
-    [formGroup]="taskFilter"
-    class="flex flex-col space-y-6 w-1/5 bg-gray-100 p-6 shadow-lg rounded-r-lg"
-  >
+  <div [formGroup]="taskFilter" class="flex flex-col space-y-6 w-1/5 bg-gray-100 p-6 shadow-lg rounded-r-lg">
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Task Filters</h2>
 
     <!-- Task Name -->
     <div>
-      <label
-        for="task_name"
-        class="block mb-2 text-sm font-medium text-gray-700"
-      >
+      <label for="task_name" class="block mb-2 text-sm font-medium text-gray-700">
         Task name
       </label>
-      <input
-        type="text"
-        id="taskName"
-        formControlName="taskName"
+      <input type="text" id="taskName" formControlName="taskName"
         class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-full max-w-xs shadow-sm"
-        placeholder="e.g., Project X"
-      />
+        placeholder="e.g., Project X" />
     </div>
 
     <!-- Select Option -->
     <div>
-      <label
-        for="state_select"
-        class="block mb-2 text-sm font-medium text-gray-700"
-      >
+      <label for="state_select" class="block mb-2 text-sm font-medium text-gray-700">
         Select an option
       </label>
-      <select
-        id="state"
-        formControlName="state"
-        class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-full max-w-xs shadow-sm"
-      >
+      <select id="state" formControlName="state"
+        class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-full max-w-xs shadow-sm">
         <option value="">-- Select state --</option>
         <div *ngFor="let state of state">
           <option>{{ state }}</option>
@@ -46,90 +30,63 @@
     <!-- Created Date Range -->
     <div class="flex flex-col gap-y-4">
       <div>
-        <label
-          for="created_from"
-          class="block mb-2 text-sm font-medium text-gray-700"
-        >
+        <label for="created_from" class="block mb-2 text-sm font-medium text-gray-700">
           Created date from
         </label>
-        <input
-          type="date"
-          id="createdDateFrom"
-          formControlName="createdDateFrom"
-          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-full max-w-xs shadow-sm"
-        />
+        <input type="date" id="createdDateFrom" formControlName="createdDateFrom"
+          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-full max-w-xs shadow-sm" />
       </div>
       <div>
-        <label
-          for="created_to"
-          class="block mb-2 text-sm font-medium text-gray-700"
-        >
+        <label for="created_to" class="block mb-2 text-sm font-medium text-gray-700">
           Created date to
         </label>
-        <input
-          type="date"
-          id="createdDateTo"
-          formControlName="createdDateTo"
-          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-full max-w-xs shadow-sm"
-        />
+        <input type="date" id="createdDateTo" formControlName="createdDateTo"
+          class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-full max-w-xs shadow-sm" />
       </div>
     </div>
 
     <!-- Assigned To -->
     <div>
-      <label
-        for="assignedTo"
-        class="block mb-2 text-sm font-medium text-gray-700"
-      >
+      <label for="assignedTo" class="block mb-2 text-sm font-medium text-gray-700">
         Assigned to
       </label>
       <!-- Placeholder for app-user-search-select -->
-      <input
-        type="text"
-        id="assignedTo"
-        formControlName="assignedTo"
+      <input type="text" id="assignedTo" formControlName="assignedTo"
         class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-full max-w-xs shadow-sm"
-        placeholder="e.g., John Doe"
-      />
+        placeholder="e.g., John Doe" />
       <p class="text-xs text-gray-500 mt-1">
         (Placeholder for app-user-search-select)
       </p>
     </div>
-    <button
-      type="button"
-      (click)="filter.emit(taskFilter.value)"
-      class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 shadow-md transition duration-200 ease-in-out transform hover:scale-105"
-    >
+    <button type="button" (click)="filter.emit(taskFilter.value)"
+      class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 shadow-md transition duration-200 ease-in-out transform hover:scale-105">
       Apply Filters
     </button>
   </div>
 
   <div class="flex-1 bg-gray-50 p-6 task-list-container flex flex-col">
-    <div
-      id="tasksContainer"
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-    >
+    <div id="tasksContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div *ngFor="let task of pageResult?.content">
         <app-task-card-view [projectKey]="projectKey" [taskSummary]="task"></app-task-card-view>
       </div>
     </div>
 
     <div class="flex justify-center items-center mt-auto space-x-4">
-      <div *ngIf="currentPage >= 1">
-        <button
-          [disabled]="currentPage === 1"
-          (click)="nextPage.emit(false)"
-          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 ease-in-out"
-        >
+      <div *ngIf="currentPage >= 1 && pageResult && pageResult.prevCursorId > 0">
+        <button [disabled]="currentPage === 1" (click)="nextPage.emit(false)"
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 ease-in-out">
           Previous
         </button>
       </div>
-      <div *ngIf="currentPage >= 1 && pageResult?.hasNextPage">
+      <div *ngIf="currentPage >=1">
         <button
-          [disabled]="!pageResult?.hasNextPage"
-          (click)="nextPage.emit(true)"
-          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-300 transition duration-300 ease-in-out"
-        >
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-300 transition duration-300 ease-in-out">
+          {{ currentPage }}
+        </button>
+      </div>
+      <div *ngIf="currentPage >= 1 && pageResult && pageResult.nextCursorId > 0">
+        <button [disabled]="pageResult.nextCursorId === 0" (click)="nextPage.emit(true)"
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-300 transition duration-300 ease-in-out">
           Next
         </button>
       </div>
